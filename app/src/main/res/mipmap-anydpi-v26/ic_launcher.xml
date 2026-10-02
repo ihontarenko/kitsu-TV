@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ⚠️ `monochrome` IS THE THIRD LAYER, and it is not decoration. Android 13 and later can tint an
+  icon to the system theme, and an application without this layer is simply left out of that — it
+  keeps its own colours in a row where everything else has been recoloured, which reads as an icon
+  that failed to load rather than as one that opted out.
+
+  It points at the same drawable as the foreground because the mark is already a single flat colour
+  on transparency, which is exactly what a monochrome layer has to be. A foreground with two tones
+  would need its own silhouette here.
+-->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/ic_launcher_background" />
+    <foreground android:drawable="@drawable/ic_launcher_foreground" />
+    <monochrome android:drawable="@drawable/ic_launcher_monochrome" />
+</adaptive-icon>

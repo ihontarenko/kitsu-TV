@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kitsu TV — Genres</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tv.css">
+  <style>
+    /*
+      A wall of NODES rather than of posters.
+
+      ⚠️ A GENRE HAS NO FACE. It owns no artwork, and borrowing the first film's poster is a lie
+      that looks convincing — somebody learns that "Comedy" is the one with the green cover, and the
+      day a film is added the shelf rearranges itself for no reason they can see. The name and the
+      count are what the choice is actually made on, so they are what the tile carries.
+
+      ⚠️ AND THE SAME LAYOUT SERVES COLLECTIONS. The two differ in what is behind them, never in how
+      they are picked; see `tv-collections.html`, which is this file with two words changed.
+     */
+    .shelf {
+      padding: var(--space-7) var(--tv-gutter) var(--space-9);
+    }
+
+    /* ⚠️ THE COUNT SITS ON THE HEADING BASELINE, which is why the row holds the h1 and the count
+       and NOT the eyebrow. A flex item aligns on its FIRST baseline, so a row of
+       [eyebrow + h1] and [count] hangs the number off the eyebrow, a line and a half too high. */
+    .shelf__head {
+      margin-bottom: var(--space-6);
+    }
+
+    .shelf__title {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-4);
+    }
+
+    .shelf__head h1 {
+      font-size: var(--text-h1);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+    }
+
+    .shelf__count {
+      font-size: var(--text-h2);
+      color: var(--kt-fg-subtle);
+    }
+
+    /* ⚠️ Wider tracks than the poster wall and a 2:1 tile: a name has to fit on one line at this
+       size, and two lines of a genre name in a grid reads as two different genres. */
+    .node-wall {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+      gap: var(--tv-tile-gap);
+      padding: 1rem;
+      margin: -1rem;
+    }
+
+    .node-tile {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: var(--space-1);
+      aspect-ratio: 2 / 1;
+      padding: var(--space-4);
+      background: var(--kt-bg-elevated);
+      border: 1px solid var(--kt-border);
+      color: inherit;
+    }
+
+    .node-tile__name {
+      font-size: var(--text-lead);
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    .node-tile__count {
+      font-family: var(--font-mono);
+      font-size: var(--text-eyebrow);
+      color: var(--kt-fg-subtle);
+    }
+  </style>
+</head>
+<body>
+  <div class="tv-screen">
+
+    <header class="tv-deck">
+      <div class="tv-brand" aria-label="Kitsu">
+        <span class="tv-brand__mark" aria-hidden="true"></span>
+        <span><span class="tv-brand__soft">media</span>hub</span>
+      </div>
+      <nav class="tv-bays" aria-label="Bays" data-row>
+        <a class="tv-bay tv-focus" href="tv-home.html">Home</a>
+        <a class="tv-bay tv-focus" href="tv-films.html">Films</a>
+        <a class="tv-bay tv-focus" href="tv-series.html">Series</a>
+        <a class="tv-bay tv-focus" href="tv-collections.html">Collections</a>
+        <a class="tv-bay tv-focus" href="tv-genres.html" aria-current="page">Genres</a>
+        <a class="tv-bay tv-focus" href="tv-favourites.html">Favourites</a>
+        <a class="tv-bay tv-focus" href="tv-search.html">Search</a>
+      </nav>
+      <div class="tv-deck__status">
+        <span class="tv-deck__server">IVAN-PC</span>
+        <a class="tv-avatar tv-focus" href="tv-profiles.html" aria-label="Profile: Home. Switch profile">HO</a>
+      </div>
+    </header>
+
+    <main class="tv-main shelf">
+      <div class="shelf__head">
+        <p class="tv-eyebrow">Browse</p>
+        <div class="shelf__title">
+          <h1>Genres</h1>
+          <p class="shelf__count">9 genres</p>
+        </div>
+      </div>
+
+      <ul class="node-wall" role="list" aria-label="Genres">
+        <li>
+          <a class="node-tile tv-focus" href="tv-node.html" autofocus>
+            <span class="node-tile__name">Дитячий</span>
+            <span class="node-tile__count">2 titles</span>
+          </a>
+        </li>
+        <li>
+          <a class="node-tile tv-focus" href="tv-node.html">
+            <span class="node-tile__name">Комедія</span>
+            <span class="node-tile__count">2 titles</span>
+          </a>
+        </li>
+        <li>
+          <a class="node-tile tv-focus" href="tv-node.html">
+            <span class="node-tile__name">Мультфільм</span>
+            <span class="node-tile__count">2 titles</span>
+          </a>
+        </li>
+        <li>
+          <a class="node-tile tv-focus" href="tv-node.html">
+            <span class="node-tile__name">Науково фантастичний</span>
+            <span class="node-tile__count">2 titles</span>
+          </a>
+        </li>
+        <li>
+          <a class="node-tile tv-focus" href="tv-node.html">
+            <span class="node-tile__name">Драма</span>
+            <span class="node-tile__count">1 title</span>
+          </a>
+        </li>
+        <li>
+          <a class="node-tile tv-focus" href="tv-node.html">
+            <span class="node-tile__name">Екшн і Пригоди</span>
+            <span class="node-tile__count">1 title</span>
+          </a>
+        </li>
+        <li>
+          <a class="node-tile tv-focus" href="tv-node.html">
+            <span class="node-tile__name">Пригоди</span>
+            <span class="node-tile__count">1 title</span>
+          </a>
+        </li>
+        <li>
+          <a class="node-tile tv-focus" href="tv-node.html">
+            <span class="node-tile__name">Сімейний</span>
+            <span class="node-tile__count">1 title</span>
+          </a>
+        </li>
+        <li>
+          <a class="node-tile tv-focus" href="tv-node.html">
+            <span class="node-tile__name">Фантастика</span>
+            <span class="node-tile__count">1 title</span>
+          </a>
+        </li>
+      </ul>
+    </main>
+  </div>
+  <a hidden data-back="tv-home.html"></a>
+  <script src="tv.js"></script>
+</body>
+</html>

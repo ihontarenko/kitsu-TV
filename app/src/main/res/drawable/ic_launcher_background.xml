@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The ground behind the mark.
+
+  ⚠️ THE ACCENT, AND THAT IS THE CHANGE. This was #121114 — Kitsu's page ground — with the mark's
+  own orange in the foreground on top of it. The icon now wears the lockup the UI kit calls the one
+  on a fill: the accent as the whole ground, and the mark on it in the ink chosen to read ON that
+  fill. Two reasons it is better on a television. A launcher row is a wall of dark circles with a
+  small coloured glyph in the middle of each, and a mark in the accent on a near-black ground is one
+  more of them; a solid accent tile is the only warm shape in the row. And the mark itself is then
+  drawn at full size rather than at whatever size a glyph on a dark field can afford.
+
+  ⚠️ #FF641B IS EMBER, the default accent, and it is written out rather than referenced because an
+  icon has no palette to follow. Inside the application the same lockup takes `Kitsu.accent` and
+  follows whichever of nine palettes is on; a launcher renders this once, at install time, with no
+  application running. It is the same decision the browser's favicon makes and it must be the same
+  hex: `Accent.Ember` in `Theme.kt` and the `kt-accent-ember` token in the interface's `styles.css`.
+
+  ⚠️ FLAT, AND THE WHOLE 108. A launcher may crop this to a circle, a squircle or a rounded square
+  and may also PARALLAX it against the foreground — so it has to be full-bleed and it must not carry
+  anything that has to stay aligned with the mark.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FF641B"
+        android:pathData="M0,0h108v108H0z" />
+</vector>

@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kitsu TV — Player</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tv.css">
+  <style>
+    /* The player: the picture is the screen. The chrome is two thin bands that
+       rise from the picture's own edges, gone after 2.6 s of nothing pressed;
+       the playback decision (direct play / transcode) is the one line that is
+       never hidden while the chrome is up, because it is the first question when
+       the picture stutters. */
+    .player {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .player__frame {
+      position: absolute;
+      inset: 0;
+    }
+
+    .player__frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .player__chrome {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .player__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: var(--space-7) var(--tv-gutter) var(--space-9);
+      background: linear-gradient(to bottom, rgba(4, 7, 16, 0.9) 0%, rgba(4, 7, 16, 0.6) 50%, transparent 100%);
+    }
+
+    .player__what {
+      display: grid;
+      gap: var(--space-1);
+    }
+
+    .player__what h1 {
+      font-size: var(--text-h2);
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    .player__decision {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      font-family: var(--font-mono);
+      font-size: var(--text-meta);
+      color: var(--kt-fg-muted);
+    }
+
+    .player__centre {
+      display: grid;
+      place-items: center;
+    }
+
+    .player__glyph {
+      width: 8rem;
+      height: 8rem;
+      display: grid;
+      place-items: center;
+      background: var(--kt-scrim);
+      color: var(--kt-fg);
+      border: 1px solid var(--kt-border-strong);
+    }
+
+    .player__glyph .tv-icon {
+      width: 4rem;
+      height: 4rem;
+    }
+
+    .player__bottom {
+      display: grid;
+      gap: var(--space-4);
+      padding: var(--space-9) var(--tv-gutter) var(--space-7);
+      background: linear-gradient(to top, rgba(4, 7, 16, 0.94) 0%, rgba(4, 7, 16, 0.8) 55%, transparent 100%);
+    }
+
+    /* The seek bar: focusable as one control; LEFT/RIGHT step it while it is in hand. */
+    .seek {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: var(--space-5);
+      font-family: var(--font-mono);
+      font-size: var(--text-lead);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .seek__bar {
+      position: relative;
+      height: 0.5rem;
+      background: color-mix(in oklab, var(--kt-fg) 26%, transparent);
+      outline: var(--tv-focus-width) solid transparent;
+      outline-offset: 0.75rem;
+      transition: outline-color var(--motion);
+    }
+
+    .seek__bar:is(:focus, .is-focused) {
+      outline-color: var(--tv-focus);
+    }
+
+    .seek__played {
+      position: absolute;
+      inset: 0 auto 0 0;
+      background: var(--kt-progress);
+    }
+
+    .seek__buffered {
+      position: absolute;
+      inset: 0 auto 0 0;
+      background: color-mix(in oklab, var(--kt-fg) 18%, transparent);
+    }
+
+    .seek__thumb {
+      position: absolute;
+      top: 50%;
+      width: 1.5rem;
+      height: 1.5rem;
+      transform: translate(-50%, -50%);
+      background: var(--kt-progress);
+      border: 0.1875rem solid var(--kt-fg);
+    }
+
+    /* A chapter or a scene mark sits on the bar as a hairline. */
+    .seek__mark {
+      position: absolute;
+      top: -0.25rem;
+      bottom: -0.25rem;
+      width: 2px;
+      background: color-mix(in oklab, var(--kt-fg) 60%, transparent);
+    }
+
+    .seek__ends {
+      color: var(--kt-fg-muted);
+      font-size: var(--text-meta);
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .controls__group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .controls__group--right {
+      margin-left: auto;
+    }
+
+    .controls .tv-button {
+      background: color-mix(in oklab, var(--kt-bg) 55%, transparent);
+      border-color: color-mix(in oklab, var(--kt-fg) 20%, transparent);
+    }
+
+    .controls .tv-button--primary {
+      background: var(--kt-accent);
+      border-color: transparent;
+    }
+
+    .controls .tv-button__hint {
+      color: var(--kt-fg-muted);
+    }
+
+    /* The card that rises at the end of an episode: the next one, and a count. */
+    .upnext {
+      position: absolute;
+      right: var(--tv-gutter);
+      bottom: var(--space-8);
+      width: 36rem;
+      display: grid;
+      grid-template-columns: 12rem 1fr;
+      gap: var(--space-4);
+      padding: var(--space-4);
+      background: var(--kt-bg-overlay);
+      border: 1px solid var(--kt-border-strong);
+    }
+
+    .upnext__still {
+      aspect-ratio: 16 / 9;
+      display: grid;
+      place-items: center;
+      font-family: var(--font-mono);
+      color: var(--kt-fg-subtle);
+      background: linear-gradient(160deg, color-mix(in oklab, var(--kt-kind-series) 18%, var(--kt-bg-elevated)), var(--kt-bg-elevated));
+      border: 1px solid var(--kt-border);
+    }
+
+    .upnext__body {
+      display: grid;
+      gap: var(--space-2);
+      align-content: start;
+    }
+
+    .upnext__name {
+      font-size: var(--text-body);
+      font-weight: 700;
+    }
+
+    .upnext__count {
+      font-family: var(--font-mono);
+      font-size: var(--text-meta);
+      color: var(--kt-accent-text);
+    }
+
+    .upnext .tv-actions {
+      grid-column: 1 / -1;
+    }
+
+    .upnext .tv-button {
+      min-height: 3.5rem;
+      font-size: var(--text-caption);
+    }
+
+    /* The track picker: one list per track kind, the current one marked. */
+    .tracks {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-7);
+    }
+
+    .tracks h3 {
+      margin-bottom: var(--space-3);
+    }
+
+    .track {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-4);
+      min-height: 4rem;
+      padding: 0 var(--space-4);
+      width: 100%;
+      text-align: left;
+      color: var(--kt-fg-muted);
+      font-size: var(--text-body);
+      font-weight: 600;
+      border-left: 0.25rem solid transparent;
+    }
+
+    .track[aria-checked="true"] {
+      color: var(--kt-fg);
+      border-left-color: var(--kt-accent);
+      background: var(--kt-bg-elevated);
+    }
+
+    .track:is(:focus, .is-focused) {
+      color: var(--kt-fg);
+      background: var(--kt-bg-elevated);
+    }
+
+    .track__detail {
+      font-family: var(--font-mono);
+      font-size: var(--text-meta);
+      color: var(--kt-fg-subtle);
+    }
+  </style>
+</head>
+<body>
+  <main class="player" data-states="paused playing ending" data-state="paused" aria-label="Player">
+
+    <div class="player__frame" aria-hidden="true">
+      <img src="https://image.tmdb.org/t/p/original/ixgFmf1X59PUZam2qbAfskx2gQr.jpg" alt="">
+    </div>
+
+    <!-- 2 · playing: the chrome is folded away; only the picture -->
+    <div data-when="playing" aria-hidden="true"></div>
+
+    <!-- 1 · paused: the chrome is up -->
+    <div class="player__chrome" data-when="paused">
+      <div class="player__top">
+        <div class="player__what">
+          <p class="tv-eyebrow">Severance · Season 1 · Episode 4</p>
+          <h1>The You You Are</h1>
+        </div>
+        <div class="player__decision">
+          <span class="tv-badge tv-badge--ok">Direct play</span>
+          <span>1080p · H.264 · 8.4 Mb/s</span>
+          <span>21:42</span>
+        </div>
+      </div>
+
+      <div class="player__centre">
+        <span class="player__glyph" aria-hidden="true"><svg class="tv-icon"><use href="#i-pause"/></svg></span>
+      </div>
+
+      <div class="player__bottom">
+        <div class="seek" data-row>
+          <span aria-hidden="true">26:12</span>
+          <div class="seek__bar" role="slider" tabindex="0" aria-label="Position" aria-valuemin="0" aria-valuemax="2880" aria-valuenow="1572" aria-valuetext="26 minutes 12 seconds of 48 minutes" autofocus>
+            <span class="seek__buffered" style="width: 71%"></span>
+            <span class="seek__played" style="width: 54.6%"></span>
+            <span class="seek__mark" style="left: 8%" aria-hidden="true"></span>
+            <span class="seek__mark" style="left: 96%" aria-hidden="true"></span>
+            <span class="seek__thumb" style="left: 54.6%" aria-hidden="true"></span>
+          </div>
+          <span aria-hidden="true">−21:48 <span class="seek__ends">· ends 22:04</span></span>
+        </div>
+
+        <div class="controls" data-row>
+          <div class="controls__group">
+            <button class="tv-button tv-button--secondary tv-button--icon tv-focus" type="button" aria-label="Back 10 seconds"><svg class="tv-icon" aria-hidden="true"><use href="#i-back10"/></svg></button>
+            <button class="tv-button tv-button--primary tv-focus" type="button" data-set-state="playing" aria-label="Play" data-row-start><svg class="tv-icon" aria-hidden="true"><use href="#i-play"/></svg> Play</button>
+            <button class="tv-button tv-button--secondary tv-button--icon tv-focus" type="button" aria-label="Forward 10 seconds"><svg class="tv-icon" aria-hidden="true"><use href="#i-forward10"/></svg></button>
+          </div>
+          <div class="controls__group controls__group--right">
+            <button class="tv-button tv-button--secondary tv-focus" type="button" data-open-dialog="tracks-dialog">
+              <svg class="tv-icon" aria-hidden="true"><use href="#i-audio"/></svg> English 5.1
+            </button>
+            <button class="tv-button tv-button--secondary tv-focus" type="button" data-open-dialog="tracks-dialog">
+              <svg class="tv-icon" aria-hidden="true"><use href="#i-subtitles"/></svg> Українські
+            </button>
+            <button class="tv-button tv-button--secondary tv-focus" type="button" data-set-state="ending">
+              <svg class="tv-icon" aria-hidden="true"><use href="#i-next"/></svg> Next <span class="tv-button__hint">E5</span>
+            </button>
+          </div>
+        </div>
+
+        <p class="tv-hints" aria-label="Remote control hints">
+          <span><span class="tv-keycap">◀ ▶</span> 10 s · hold to scrub</span>
+          <span><span class="tv-keycap">OK</span> play / pause</span>
+          <span><span class="tv-keycap">▼</span> controls</span>
+          <span><span class="tv-keycap">BACK</span> leave, position kept</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- 3 · ending: the credits roll, the next episode offers itself -->
+    <div data-when="ending">
+      <aside class="upnext" aria-labelledby="upnext-title">
+        <span class="upnext__still" aria-hidden="true">E5</span>
+        <div class="upnext__body">
+          <p class="tv-eyebrow tv-eyebrow--muted">Up next · Season 1 · Episode 5</p>
+          <p class="upnext__name" id="upnext-title">The Grim Barbarity of Optics and Design</p>
+          <p class="upnext__count">Plays in 8 s</p>
+        </div>
+        <div class="tv-actions" data-row>
+          <button class="tv-button tv-button--primary tv-focus" type="button" data-set-state="playing" autofocus><svg class="tv-icon" aria-hidden="true"><use href="#i-play"/></svg> Play now</button>
+          <a class="tv-button tv-button--secondary tv-focus" href="tv-series.html">Not now</a>
+        </div>
+      </aside>
+    </div>
+
+  </main>
+
+  <dialog class="tv-dialog" id="tracks-dialog" aria-labelledby="tracks-title" style="width: min(80rem, 92vw)">
+    <h2 class="tv-dialog__title" id="tracks-title">Audio &amp; subtitles</h2>
+    <p class="tv-muted" style="margin-bottom: var(--space-6)">The choice is kept for this series.</p>
+    <div class="tracks">
+      <div>
+        <h3 class="tv-eyebrow tv-eyebrow--muted">Audio</h3>
+        <div role="radiogroup" aria-label="Audio track" data-row>
+          <button class="track tv-focus" type="button" role="radio" aria-checked="true" autofocus><span>English</span><span class="track__detail">AC-3 5.1</span></button>
+          <button class="track tv-focus" type="button" role="radio" aria-checked="false"><span>Українська</span><span class="track__detail">AAC 2.0 · dub</span></button>
+          <button class="track tv-focus" type="button" role="radio" aria-checked="false"><span>English · descriptive</span><span class="track__detail">AAC 2.0</span></button>
+        </div>
+      </div>
+      <div>
+        <h3 class="tv-eyebrow tv-eyebrow--muted">Subtitles</h3>
+        <div role="radiogroup" aria-label="Subtitles" data-row>
+          <button class="track tv-focus" type="button" role="radio" aria-checked="false"><span>Off</span></button>
+          <button class="track tv-focus" type="button" role="radio" aria-checked="true"><span>Українські</span><span class="track__detail">SRT</span></button>
+          <button class="track tv-focus" type="button" role="radio" aria-checked="false"><span>English</span><span class="track__detail">PGS</span></button>
+          <button class="track tv-focus" type="button" role="radio" aria-checked="false"><span>English · SDH</span><span class="track__detail">SRT</span></button>
+        </div>
+      </div>
+    </div>
+    <p class="tv-hints" style="margin-top: var(--space-6)"><span><span class="tv-keycap">OK</span> choose</span><span><span class="tv-keycap">BACK</span> close</span></p>
+  </dialog>
+
+  <a hidden data-back="tv-series.html"></a>
+  <script src="tv.js"></script>
+  <script>
+    /* While the picture plays, OK or any arrow brings the chrome back — paused
+       here stands in for "chrome up", since the mock-up has no clock to run. */
+    document.addEventListener("keydown", function (event) {
+      const player = document.querySelector(".player");
+      const chromeIsFolded = player.dataset.state === "playing";
+      const wakesTheChrome = event.key === "Enter" || event.key.startsWith("Arrow");
+      if (chromeIsFolded && wakesTheChrome) {
+        event.preventDefault();
+        window.KitsuTV.setState("paused");
+      }
+    }, true);
+  </script>
+</body>
+</html>

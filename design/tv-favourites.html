@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kitsu TV — Kept</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tv.css">
+  <style>
+    /*
+      What this household has kept.
+
+      ⚠️ THE HEADING IS "KEPT", NOT "FAVOURITES". The bay is named for where it sits in the deck;
+      the page is named for what the household DID. "Favourites" is a category somebody browses,
+      "Kept" is a shelf somebody filled — and the difference is the whole reason an empty state here
+      can say something useful.
+
+      ⚠️ IT IS THE SAME WALL AS A NODE'S, on purpose — see `tv-node.html`. A person who has learned
+      to read one shelf has learned to read all of them.
+     */
+    .shelf {
+      padding: var(--space-7) var(--tv-gutter) var(--space-9);
+    }
+
+    /* ⚠️ THE COUNT SITS ON THE HEADING BASELINE, which is why the row holds the h1 and the count
+       and NOT the eyebrow. A flex item aligns on its FIRST baseline, so a row of
+       [eyebrow + h1] and [count] hangs the number off the eyebrow, a line and a half too high. */
+    .shelf__head {
+      margin-bottom: var(--space-6);
+    }
+
+    .shelf__title {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-4);
+    }
+
+    .shelf__head h1 {
+      font-size: var(--text-h1);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+    }
+
+    .shelf__count {
+      font-size: var(--text-h2);
+      color: var(--kt-fg-subtle);
+    }
+
+    /* ⚠️ Names the gesture that fills the shelf. "Nothing here" is true and useless; the one thing
+       somebody standing in front of an empty list needs is the sentence that stops it being one. */
+    .shelf__empty {
+      max-width: 44ch;
+      font-size: var(--text-lead);
+      color: var(--kt-fg-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="tv-screen">
+
+    <header class="tv-deck">
+      <div class="tv-brand" aria-label="Kitsu">
+        <span class="tv-brand__mark" aria-hidden="true"></span>
+        <span><span class="tv-brand__soft">media</span>hub</span>
+      </div>
+      <nav class="tv-bays" aria-label="Bays" data-row>
+        <a class="tv-bay tv-focus" href="tv-home.html">Home</a>
+        <a class="tv-bay tv-focus" href="tv-films.html">Films</a>
+        <a class="tv-bay tv-focus" href="tv-series.html">Series</a>
+        <a class="tv-bay tv-focus" href="tv-collections.html">Collections</a>
+        <a class="tv-bay tv-focus" href="tv-genres.html">Genres</a>
+        <a class="tv-bay tv-focus" href="tv-favourites.html" aria-current="page">Favourites</a>
+        <a class="tv-bay tv-focus" href="tv-search.html">Search</a>
+      </nav>
+      <div class="tv-deck__status">
+        <span class="tv-deck__server">IVAN-PC</span>
+        <a class="tv-avatar tv-focus" href="tv-profiles.html" aria-label="Profile: Home. Switch profile">HO</a>
+      </div>
+    </header>
+
+    <main class="tv-main shelf">
+      <div class="shelf__head">
+        <p class="tv-eyebrow">Yours</p>
+        <div class="shelf__title">
+          <h1>Kept</h1>
+          <p class="shelf__count">3 titles</p>
+        </div>
+      </div>
+
+      <!-- ⚠️ `1` is a filled shelf; `2` is a new profile, which is where everybody starts. -->
+      <div data-states="kept empty" data-state="kept">
+        <ul class="tv-wall" role="list" aria-label="Kept titles" data-when="kept">
+          <li>
+            <a class="tv-tile" href="tv-title.html" autofocus>
+              <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg" alt=""></span>
+              <span class="tv-tile__caption"><span class="tv-tile__name">Interstellar</span><span class="tv-tile__meta"><span>2014</span><span class="tv-rating">★ 8.5</span><span>4K</span></span></span>
+            </a>
+          </li>
+          <li>
+            <a class="tv-tile" href="tv-title.html">
+              <span class="tv-tile__frame">
+                <img src="https://image.tmdb.org/t/p/w342/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg" alt="">
+                <span class="tv-tile__overlay"><span class="tv-progress" aria-hidden="true"><span style="width: 81%"></span></span></span>
+              </span>
+              <span class="tv-tile__caption"><span class="tv-tile__name">Blade Runner 2049</span><span class="tv-tile__meta"><span>2017</span><span class="tv-rating">★ 7.6</span></span></span>
+            </a>
+          </li>
+          <li>
+            <a class="tv-tile" href="tv-title.html">
+              <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg" alt=""></span>
+              <span class="tv-tile__caption"><span class="tv-tile__name">Inception</span><span class="tv-tile__meta"><span>2010</span><span class="tv-rating">★ 8.4</span></span></span>
+            </a>
+          </li>
+        </ul>
+
+        <p class="shelf__empty" data-when="empty">Nothing kept yet. Open a title and press Keep.</p>
+      </div>
+    </main>
+  </div>
+  <a hidden data-back="tv-home.html"></a>
+  <script src="tv.js"></script>
+</body>
+</html>

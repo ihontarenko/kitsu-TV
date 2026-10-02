@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kitsu TV — Pairing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tv.css">
+  <style>
+    /* Pairing: the code is the screen. Everything else is small and to the side. */
+    .pairing {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: var(--space-8) var(--tv-gutter);
+    }
+
+    .pairing__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .pairing__server {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-family: var(--font-mono);
+      font-size: var(--text-meta);
+      color: var(--kt-fg-muted);
+    }
+
+    .pairing__stage {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: var(--space-9);
+    }
+
+    .pairing__code-block {
+      display: grid;
+      gap: var(--space-5);
+    }
+
+    .pairing__steps {
+      display: grid;
+      gap: var(--space-5);
+      max-width: 44rem;
+    }
+
+    .pairing__steps h1 {
+      font-size: var(--text-h1);
+      line-height: 1.05;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .steps {
+      display: grid;
+      gap: var(--space-4);
+      counter-reset: step;
+    }
+
+    .steps li {
+      display: grid;
+      grid-template-columns: 3rem 1fr;
+      gap: var(--space-4);
+      align-items: baseline;
+      font-size: var(--text-body);
+      color: var(--kt-fg-muted);
+    }
+
+    .steps li::before {
+      counter-increment: step;
+      content: counter(step);
+      font-family: var(--font-mono);
+      font-size: var(--text-meta);
+      color: var(--kt-accent-text);
+      border: 1px solid var(--kt-border-strong);
+      width: 2.5rem;
+      height: 2.5rem;
+      display: grid;
+      place-items: center;
+    }
+
+    .steps li strong {
+      color: var(--kt-fg);
+      font-weight: 700;
+    }
+
+    .pairing__expiry {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-family: var(--font-mono);
+      font-size: var(--text-meta);
+      color: var(--kt-fg-subtle);
+    }
+
+    .pairing__expiry .tv-progress {
+      width: 20rem;
+    }
+
+    .pairing__bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Admitted: the code makes way for the name that let it in. */
+    .admitted {
+      display: grid;
+      gap: var(--space-5);
+      justify-items: start;
+    }
+
+    .admitted__mark {
+      width: 6rem;
+      height: 6rem;
+      display: grid;
+      place-items: center;
+      background: var(--kt-ok-bg);
+      color: var(--kt-ok);
+      border: 1px solid var(--kt-ok);
+    }
+
+    .admitted h1 {
+      font-size: var(--text-h1);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+    }
+
+    .expired .tv-code {
+      color: var(--kt-fg-subtle);
+      text-decoration: line-through;
+      text-decoration-thickness: 0.25rem;
+      text-decoration-color: var(--kt-danger);
+    }
+  </style>
+</head>
+<body>
+  <main class="pairing tv-glow" data-states="waiting admitted expired" data-state="waiting">
+
+    <header class="pairing__top">
+      <div class="tv-brand" aria-label="Kitsu">
+        <span class="tv-brand__mark" aria-hidden="true"></span>
+        <span><span class="tv-brand__soft">media</span>hub</span>
+      </div>
+      <p class="pairing__server"><svg class="tv-icon tv-icon--sm" aria-hidden="true"><use href="#i-server"/></svg> Kitsu on IVAN-PC · 192.168.1.24:8130</p>
+    </header>
+
+    <!-- 1 · waiting for the server to confirm -->
+    <section class="pairing__stage" data-when="waiting" aria-labelledby="waiting-title">
+      <div class="pairing__code-block">
+        <p class="tv-eyebrow">Pairing code</p>
+        <p class="tv-code" aria-label="Pairing code 4 8 2 9 1 7"><span aria-hidden="true">482 917</span></p>
+        <div class="pairing__expiry">
+          <span class="tv-progress" aria-hidden="true"><span style="width: 62%"></span></span>
+          <span>Valid for 3:07</span>
+        </div>
+      </div>
+      <div class="pairing__steps">
+        <h1 id="waiting-title">Let this television in</h1>
+        <ol class="steps">
+          <li><span>On the server, open <strong>Kitsu → Server → Devices</strong>.</span></li>
+          <li><span>Choose <strong>Admit a device</strong> and type the six digits.</span></li>
+          <li><span>This screen continues on its own.</span></li>
+        </ol>
+        <p class="pairing__expiry"><span class="tv-spinner" aria-hidden="true"></span> Waiting for the server to confirm</p>
+      </div>
+    </section>
+
+    <!-- 2 · admitted -->
+    <section class="pairing__stage" data-when="admitted" aria-labelledby="admitted-title">
+      <div class="admitted">
+        <span class="admitted__mark" aria-hidden="true"><svg class="tv-icon tv-icon--lg"><use href="#i-check"/></svg></span>
+        <p class="tv-eyebrow" style="color: var(--kt-ok)">Admitted</p>
+        <h1 id="admitted-title">This television is in.</h1>
+        <p class="tv-lead">Approved by <em>Ivan</em> from Chrome on Windows. It stays paired until it is removed on the Server screen.</p>
+        <a class="tv-button tv-button--primary tv-focus" href="tv-profiles.html" autofocus>Continue <svg class="tv-icon" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+      </div>
+      <dl class="tv-facts" aria-label="Device details">
+        <dt>Device</dt><dd>Living room TV</dd>
+        <dt>Model</dt><dd>Android TV · Sony BRAVIA</dd>
+        <dt>Direct play</dt><dd>H.264 · HEVC 10-bit · AAC · AC-3</dd>
+        <dt>Server</dt><dd>Kitsu on IVAN-PC</dd>
+      </dl>
+    </section>
+
+    <!-- 3 · code expired -->
+    <section class="pairing__stage expired" data-when="expired" aria-labelledby="expired-title">
+      <div class="pairing__code-block">
+        <p class="tv-eyebrow" style="color: var(--kt-danger)">Code expired</p>
+        <p class="tv-code" aria-label="Expired code 4 8 2 9 1 7"><span aria-hidden="true">482 917</span></p>
+        <div class="pairing__expiry">
+          <span class="tv-progress" aria-hidden="true"><span style="width: 0%"></span></span>
+          <span>Codes last five minutes</span>
+        </div>
+      </div>
+      <div class="pairing__steps">
+        <h1 id="expired-title">Nobody confirmed in time.</h1>
+        <p class="tv-lead">A new code takes a second. The server has not been told anything about this television yet.</p>
+        <div class="tv-actions">
+          <button class="tv-button tv-button--primary tv-focus" type="button" data-set-state="waiting" autofocus>New code</button>
+          <a class="tv-button tv-button--quiet tv-focus" href="tv-connect.html">Choose another server</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="pairing__bottom">
+      <p class="tv-hints" aria-label="Remote control hints">
+        <span><span class="tv-keycap">BACK</span> choose another server</span>
+      </p>
+      <p class="tv-subtle tv-mono">Device · Living room TV</p>
+    </footer>
+
+  </main>
+  <a hidden data-back="tv-connect.html"></a>
+  <script src="tv.js"></script>
+</body>
+</html>

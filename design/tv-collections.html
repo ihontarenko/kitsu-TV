@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kitsu TV — Collections</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tv.css">
+  <style>
+    /*
+      The collections, and the empty state that is the ordinary case.
+
+      ⚠️ THIS IS `tv-genres.html` WITH TWO WORDS CHANGED, deliberately. Both are a wall of nodes,
+      and they are picked the same way — the difference lives behind them, in how their titles are
+      fetched, and a household should never be able to tell which screen it is on by the layout.
+
+      ⚠️ THE EMPTY STATE IS THE STATE THIS SCREEN IS USUALLY IN, so it is drawn rather than assumed.
+      Collections are made in the browser and most households never make one; a shelf that says
+      "Nothing here" about a thing they have never heard of teaches them nothing. It says where the
+      thing is made.
+     */
+    .shelf {
+      padding: var(--space-7) var(--tv-gutter) var(--space-9);
+    }
+
+    /* ⚠️ THE COUNT SITS ON THE HEADING BASELINE, which is why the row holds the h1 and the count
+       and NOT the eyebrow. A flex item aligns on its FIRST baseline, so a row of
+       [eyebrow + h1] and [count] hangs the number off the eyebrow, a line and a half too high. */
+    .shelf__head {
+      margin-bottom: var(--space-6);
+    }
+
+    .shelf__title {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-4);
+    }
+
+    .shelf__head h1 {
+      font-size: var(--text-h1);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+    }
+
+    .shelf__count {
+      font-size: var(--text-h2);
+      color: var(--kt-fg-subtle);
+    }
+
+    .node-wall {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+      gap: var(--tv-tile-gap);
+      padding: 1rem;
+      margin: -1rem;
+    }
+
+    .node-tile {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: var(--space-1);
+      aspect-ratio: 2 / 1;
+      padding: var(--space-4);
+      background: var(--kt-bg-elevated);
+      border: 1px solid var(--kt-border);
+      color: inherit;
+    }
+
+    .node-tile__name {
+      font-size: var(--text-lead);
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    .node-tile__count {
+      font-family: var(--font-mono);
+      font-size: var(--text-eyebrow);
+      color: var(--kt-fg-subtle);
+    }
+
+    /* ⚠️ A sentence at reading size, not a centred illustration. There is nothing to look at; the
+       only useful thing on the screen is the instruction, so it sits where the first tile would. */
+    .shelf__empty {
+      max-width: 44ch;
+      font-size: var(--text-lead);
+      color: var(--kt-fg-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="tv-screen">
+
+    <header class="tv-deck">
+      <div class="tv-brand" aria-label="Kitsu">
+        <span class="tv-brand__mark" aria-hidden="true"></span>
+        <span><span class="tv-brand__soft">media</span>hub</span>
+      </div>
+      <nav class="tv-bays" aria-label="Bays" data-row>
+        <a class="tv-bay tv-focus" href="tv-home.html">Home</a>
+        <a class="tv-bay tv-focus" href="tv-films.html">Films</a>
+        <a class="tv-bay tv-focus" href="tv-series.html">Series</a>
+        <a class="tv-bay tv-focus" href="tv-collections.html" aria-current="page">Collections</a>
+        <a class="tv-bay tv-focus" href="tv-genres.html">Genres</a>
+        <a class="tv-bay tv-focus" href="tv-favourites.html">Favourites</a>
+        <a class="tv-bay tv-focus" href="tv-search.html">Search</a>
+      </nav>
+      <div class="tv-deck__status">
+        <span class="tv-deck__server">IVAN-PC</span>
+        <a class="tv-avatar tv-focus" href="tv-profiles.html" aria-label="Profile: Home. Switch profile">HO</a>
+      </div>
+    </header>
+
+    <main class="tv-main shelf">
+      <div class="shelf__head">
+        <p class="tv-eyebrow">Arranged</p>
+        <div class="shelf__title">
+          <h1>Collections</h1>
+          <p class="shelf__count">4 collections</p>
+        </div>
+      </div>
+
+      <!-- ⚠️ `1` shows what a household with collections sees; `2` shows what most of them see. -->
+      <div data-states="arranged empty" data-state="arranged">
+        <ul class="node-wall" role="list" aria-label="Collections" data-when="arranged">
+          <li>
+            <a class="node-tile tv-focus" href="tv-node.html" autofocus>
+              <span class="node-tile__name">Christopher Nolan</span>
+              <span class="node-tile__count">6 titles</span>
+            </a>
+          </li>
+          <li>
+            <a class="node-tile tv-focus" href="tv-node.html">
+              <span class="node-tile__name">Дивимось із дітьми</span>
+              <span class="node-tile__count">11 titles</span>
+            </a>
+          </li>
+          <li>
+            <a class="node-tile tv-focus" href="tv-node.html">
+              <span class="node-tile__name">Новорічне</span>
+              <span class="node-tile__count">5 titles</span>
+            </a>
+          </li>
+          <li>
+            <a class="node-tile tv-focus" href="tv-node.html">
+              <span class="node-tile__name">Ще не дивились</span>
+              <span class="node-tile__count">9 titles</span>
+            </a>
+          </li>
+        </ul>
+
+        <p class="shelf__empty" data-when="empty">No collections yet. They are made in the browser.</p>
+      </div>
+    </main>
+  </div>
+  <a hidden data-back="tv-home.html"></a>
+  <script src="tv.js"></script>
+</body>
+</html>

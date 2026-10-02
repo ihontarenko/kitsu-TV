@@ -1,0 +1,12 @@
+/.gradle/
+/build/
+/app/build/
+/local.properties
+/.idea/
+*.iml
+/.kotlin/
+/design/node_modules/
+/dist/
+/.shots/
+/.build*.log
+/.gradle-bootstrap.log

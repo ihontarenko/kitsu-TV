@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kitsu TV — Search</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tv.css">
+  <style>
+    /* Search: the keyboard lives on the left where the thumb rests, the results
+       fill in on the right as letters land. Results are a wall, and RIGHT from
+       the keyboard's last column crosses into it; every result says why it
+       matched, because "інтер" finding Interstellar is not obvious from a sofa. */
+    .search {
+      display: grid;
+      grid-template-columns: 44rem 1fr;
+      gap: var(--space-9);
+      padding: var(--space-7) var(--tv-gutter) var(--space-9);
+      align-items: start;
+    }
+
+    .search__input {
+      display: grid;
+      gap: var(--space-6);
+    }
+
+    .search__modes {
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    .search__hint {
+      color: var(--kt-fg-subtle);
+      font-size: var(--text-caption);
+    }
+
+    .results__head {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-4);
+      margin-bottom: var(--space-5);
+    }
+
+    .results__head h1 {
+      font-size: var(--text-h2);
+      font-weight: 700;
+    }
+
+    .results__head h1 em {
+      font-style: normal;
+      color: var(--kt-accent-text);
+    }
+
+    /* Results are a list, not a wall: each one is read — what it is, and why it
+       matched — before it is chosen, and reading goes down. The thumbnail keeps
+       its own shape (poster, square, still) inside one fixed height. */
+    .results {
+      display: grid;
+      gap: var(--space-3);
+    }
+
+    .result {
+      display: grid;
+      grid-template-columns: 12rem 1fr;
+      gap: var(--space-5);
+      align-items: center;
+      padding: var(--space-3);
+      border: 1px solid transparent;
+      color: inherit;
+      min-height: 10rem;
+    }
+
+    .result:is(:focus, .is-focused) {
+      background: var(--kt-bg-elevated);
+      border-color: var(--kt-border-strong);
+    }
+
+    .result__thumb {
+      height: 9rem;
+      display: grid;
+      place-items: center;
+      justify-self: center;
+      overflow: hidden;
+      background: var(--kt-bg-elevated);
+      border: 1px solid var(--kt-border);
+      font-size: var(--text-h2);
+      font-weight: 800;
+      color: var(--kt-fg-subtle);
+    }
+
+    .result__thumb--poster { aspect-ratio: 2 / 3; }
+    .result__thumb--square { aspect-ratio: 1; }
+    .result__thumb--still { aspect-ratio: 16 / 9; height: 6.75rem; }
+
+    .result__thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .result__body {
+      display: grid;
+      gap: var(--space-1);
+      min-width: 0;
+    }
+
+    .result__name {
+      font-size: var(--text-body);
+      font-weight: 700;
+    }
+
+    .result__why {
+      font-family: var(--font-mono);
+      font-size: var(--text-eyebrow);
+      color: var(--kt-fg-subtle);
+    }
+
+    .result__why .tv-kind {
+      margin-right: var(--space-3);
+    }
+
+    .result__why mark {
+      background: transparent;
+      color: var(--kt-accent-text);
+    }
+
+    .empty {
+      display: grid;
+      gap: var(--space-3);
+      padding: var(--space-8);
+      border: 1px solid var(--kt-border);
+      color: var(--kt-fg-muted);
+      max-width: 60rem;
+    }
+
+    .empty strong {
+      font-size: var(--text-lead);
+      color: var(--kt-fg);
+    }
+  </style>
+</head>
+<body>
+  <div class="tv-screen">
+
+    <header class="tv-deck">
+      <div class="tv-brand" aria-label="Kitsu">
+        <span class="tv-brand__mark" aria-hidden="true"></span>
+        <span><span class="tv-brand__soft">media</span>hub</span>
+      </div>
+      <nav class="tv-bays" aria-label="Bays" data-row>
+        <a class="tv-bay tv-focus" href="tv-home.html">Home</a>
+        <a class="tv-bay tv-focus" href="tv-films.html">Films</a>
+        <a class="tv-bay tv-focus" href="tv-series.html">Series</a>
+        <a class="tv-bay tv-focus" href="tv-collections.html">Collections</a>
+        <a class="tv-bay tv-focus" href="tv-genres.html">Genres</a>
+        <a class="tv-bay tv-focus" href="tv-favourites.html">Favourites</a>
+        <a class="tv-bay tv-focus" href="tv-search.html" aria-current="page">Search</a>
+      </nav>
+      <div class="tv-deck__status">
+        <span class="tv-deck__server">IVAN-PC</span>
+        <a class="tv-avatar tv-focus" href="tv-profiles.html" aria-label="Profile: Home. Switch profile">HO</a>
+      </div>
+    </header>
+
+    <main class="tv-main search" data-states="results empty" data-state="results">
+
+      <section class="search__input" aria-label="Search">
+        <div class="tv-query" role="textbox" aria-label="Search query" aria-readonly="true">
+          <span>inter</span><span class="tv-query__caret" aria-hidden="true"></span>
+        </div>
+
+        <div class="search__modes" role="group" aria-label="Keyboard" data-row>
+          <button class="tv-chip tv-focus" type="button" aria-pressed="true">ABC</button>
+          <button class="tv-chip tv-focus" type="button" aria-pressed="false">АБВ</button>
+          <button class="tv-chip tv-focus" type="button" aria-pressed="false">123</button>
+          <button class="tv-chip tv-focus" type="button" aria-label="Voice search"><svg class="tv-icon tv-icon--sm" aria-hidden="true"><use href="#i-audio"/></svg> Voice</button>
+        </div>
+
+        <div class="tv-keyboard" role="group" aria-label="Letters">
+          <div class="tv-keyboard__row" data-row="grid">
+            <button class="tv-key tv-focus" type="button">a</button><button class="tv-key tv-focus" type="button">b</button><button class="tv-key tv-focus" type="button">c</button><button class="tv-key tv-focus" type="button">d</button><button class="tv-key tv-focus" type="button">e</button><button class="tv-key tv-focus" type="button">f</button><button class="tv-key tv-focus" type="button">g</button>
+          </div>
+          <div class="tv-keyboard__row" data-row="grid">
+            <button class="tv-key tv-focus" type="button">h</button><button class="tv-key tv-focus" type="button">i</button><button class="tv-key tv-focus" type="button">j</button><button class="tv-key tv-focus" type="button">k</button><button class="tv-key tv-focus" type="button">l</button><button class="tv-key tv-focus" type="button">m</button><button class="tv-key tv-focus" type="button">n</button>
+          </div>
+          <div class="tv-keyboard__row" data-row="grid">
+            <button class="tv-key tv-focus" type="button">o</button><button class="tv-key tv-focus" type="button">p</button><button class="tv-key tv-focus" type="button">q</button><button class="tv-key tv-focus" type="button" autofocus>r</button><button class="tv-key tv-focus" type="button">s</button><button class="tv-key tv-focus" type="button">t</button><button class="tv-key tv-focus" type="button">u</button>
+          </div>
+          <div class="tv-keyboard__row" data-row="grid">
+            <button class="tv-key tv-focus" type="button">v</button><button class="tv-key tv-focus" type="button">w</button><button class="tv-key tv-focus" type="button">x</button><button class="tv-key tv-focus" type="button">y</button><button class="tv-key tv-focus" type="button">z</button><button class="tv-key tv-focus" type="button">-</button><button class="tv-key tv-focus" type="button">'</button>
+          </div>
+          <div class="tv-keyboard__row" data-row="grid">
+            <button class="tv-key tv-key--wide tv-key--space tv-focus" type="button">space</button>
+            <button class="tv-key tv-key--wide tv-focus" type="button" aria-label="Delete last letter"><svg class="tv-icon" aria-hidden="true"><use href="#i-backspace"/></svg></button>
+            <button class="tv-key tv-key--wide tv-focus" type="button" data-set-state="empty">clear</button>
+          </div>
+        </div>
+
+        <p class="search__hint">Names, people, years and genres — in either language. Results arrive as you type.</p>
+      </section>
+
+      <!-- 1 · results -->
+      <section data-when="results" aria-labelledby="results-title">
+        <div class="results__head">
+          <h1 id="results-title">Matches for <em>inter</em></h1>
+          <span class="tv-shelf__count">4</span>
+        </div>
+        <ul class="results" role="list">
+          <li>
+            <a class="result" href="tv-title.html">
+              <span class="result__thumb result__thumb--poster"><img src="https://image.tmdb.org/t/p/w342/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg" alt=""></span>
+              <span class="result__body">
+                <span class="result__name">Interstellar</span>
+                <span class="tv-meta"><span>2014</span><span class="tv-rating">★ 8.5</span><span>169 min</span></span>
+                <span class="result__why"><span class="tv-kind tv-kind--film">Film</span><mark>Inter</mark>stellar</span>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a class="result" href="#">
+              <span class="result__thumb result__thumb--square"><span aria-hidden="true">CN</span></span>
+              <span class="result__body">
+                <span class="result__name">Christopher Nolan</span>
+                <span class="tv-meta"><span>3 titles in the library</span></span>
+                <span class="result__why"><span class="tv-kind tv-kind--person">Person</span>directed <mark>Inter</mark>stellar</span>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a class="result" href="#">
+              <span class="result__thumb result__thumb--square"><span aria-hidden="true">HZ</span></span>
+              <span class="result__body">
+                <span class="result__name">Hans Zimmer</span>
+                <span class="tv-meta"><span>2 titles in the library</span></span>
+                <span class="result__why"><span class="tv-kind tv-kind--person">Person</span>music for <mark>Inter</mark>stellar</span>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a class="result" href="tv-films.html">
+              <span class="result__thumb result__thumb--still"><img src="https://image.tmdb.org/t/p/w780/8ZTVqvKDQ8emSGUEMjsS4yHAwrp.jpg" alt=""></span>
+              <span class="result__body">
+                <span class="result__name">Nolan, in order</span>
+                <span class="tv-meta"><span>3 titles</span></span>
+                <span class="result__why"><span class="tv-kind tv-kind--collection">Collection</span>holds <mark>Inter</mark>stellar</span>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <!-- 2 · nothing yet -->
+      <section data-when="empty" aria-label="No query">
+        <div class="empty tv-ruled">
+          <strong>Type a few letters.</strong>
+          <p>Three are usually enough. A year on its own lists that year; a genre on its own lists the genre.</p>
+        </div>
+      </section>
+
+    </main>
+  </div>
+  <a hidden data-back="tv-home.html"></a>
+  <script src="tv.js"></script>
+</body>
+</html>

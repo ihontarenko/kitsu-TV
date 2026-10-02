@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kitsu TV — Severance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tv.css">
+  <style>
+    /* A series: the artwork is shorter, because the episodes are the page. The
+       seasons are a row of chips; the episodes of the chosen season are a list
+       with a still, a number, a name and how much of it is left — a list rather
+       than a shelf, because an episode is read (name, length, seen or not) before
+       it is chosen, and reading goes down, not sideways. */
+    .series-hero {
+      min-height: 34rem;
+    }
+
+    .series-hero .tv-hero__body {
+      max-width: 70rem;
+    }
+
+    .seasons {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: var(--space-6) var(--tv-gutter) 0;
+    }
+
+    .seasons .tv-chip {
+      min-height: 4rem;
+      padding-inline: var(--space-5);
+      font-size: var(--text-body);
+    }
+
+    .seasons__note {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: var(--text-meta);
+      color: var(--kt-fg-subtle);
+    }
+
+    .episodes {
+      display: grid;
+      gap: var(--space-3);
+      padding: var(--space-5) var(--tv-gutter) var(--space-9);
+    }
+
+    .episode {
+      display: grid;
+      grid-template-columns: 18rem 4rem 1fr auto;
+      align-items: center;
+      gap: var(--space-5);
+      padding: var(--space-3);
+      padding-right: var(--space-5);
+      border: 1px solid transparent;
+      color: inherit;
+      width: 100%;
+      text-align: left;
+    }
+
+    .episode:is(:focus, .is-focused) {
+      background: var(--kt-bg-elevated);
+      border-color: var(--kt-border-strong);
+    }
+
+    .episode__still {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: var(--kt-bg-elevated);
+      overflow: hidden;
+      border: 1px solid var(--kt-border);
+    }
+
+    .episode__still img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .episode__still .tv-progress {
+      position: absolute;
+      inset: auto 0 0 0;
+    }
+
+    .episode__number {
+      font-family: var(--font-mono);
+      font-size: var(--text-h2);
+      color: var(--kt-fg-subtle);
+      text-align: right;
+    }
+
+    .episode__body {
+      display: grid;
+      gap: var(--space-1);
+      min-width: 0;
+    }
+
+    .episode__name {
+      font-size: var(--text-body);
+      font-weight: 700;
+    }
+
+    .episode__summary {
+      font-size: var(--text-caption);
+      color: var(--kt-fg-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .episode__trail {
+      display: grid;
+      justify-items: end;
+      gap: var(--space-1);
+      font-family: var(--font-mono);
+      font-size: var(--text-meta);
+      color: var(--kt-fg-muted);
+    }
+
+    .episode--seen .episode__name,
+    .episode--seen .episode__summary {
+      color: var(--kt-fg-subtle);
+    }
+
+    .episode--seen .episode__trail {
+      color: var(--kt-ok);
+    }
+
+    .episode--next {
+      border-left: 0.25rem solid var(--kt-accent);
+    }
+
+    /* A still that has no artwork: the number, large, on the elevated ground. */
+    .episode__placeholder {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-family: var(--font-mono);
+      font-size: var(--text-h2);
+      color: var(--kt-fg-subtle);
+      background: linear-gradient(160deg, color-mix(in oklab, var(--kt-kind-series) 18%, var(--kt-bg-elevated)), var(--kt-bg-elevated));
+    }
+  </style>
+</head>
+<body>
+  <div class="tv-screen">
+
+    <header class="tv-deck">
+      <div class="tv-brand" aria-label="Kitsu">
+        <span class="tv-brand__mark" aria-hidden="true"></span>
+        <span><span class="tv-brand__soft">media</span>hub</span>
+      </div>
+      <nav class="tv-bays" aria-label="Bays" data-row>
+        <a class="tv-bay tv-focus" href="tv-home.html">Home</a>
+        <a class="tv-bay tv-focus" href="tv-films.html">Films</a>
+        <a class="tv-bay tv-focus" href="tv-series.html" aria-current="page">Series</a>
+        <a class="tv-bay tv-focus" href="tv-collections.html">Collections</a>
+        <a class="tv-bay tv-focus" href="tv-genres.html">Genres</a>
+        <a class="tv-bay tv-focus" href="tv-favourites.html">Favourites</a>
+        <a class="tv-bay tv-focus" href="tv-search.html">Search</a>
+      </nav>
+      <div class="tv-deck__status">
+        <span class="tv-deck__server">IVAN-PC</span>
+        <a class="tv-avatar tv-focus" href="tv-profiles.html" aria-label="Profile: Home. Switch profile">HO</a>
+      </div>
+    </header>
+
+    <main class="tv-main">
+
+      <section class="tv-hero series-hero" aria-labelledby="title">
+        <div class="tv-hero__art" aria-hidden="true">
+          <img src="https://image.tmdb.org/t/p/w1280/ixgFmf1X59PUZam2qbAfskx2gQr.jpg" alt="">
+        </div>
+        <div class="tv-hero__body">
+          <p class="tv-eyebrow">Series · 2022 – · 2 seasons · 19 episodes</p>
+          <h1 class="tv-hero-title" id="title">Severance</h1>
+          <p class="tv-lead">There's more to work than life.</p>
+          <p class="tv-meta">
+            <span class="tv-rating">★ 8.4</span>
+            <span>1080p · H.264</span>
+            <span>EN · UK subtitles</span>
+            <span>14 of 19 on disk</span>
+          </p>
+          <div class="tv-actions" data-row>
+            <a class="tv-button tv-button--primary tv-focus" href="tv-player.html" autofocus>
+              <svg class="tv-icon" aria-hidden="true"><use href="#i-play"/></svg> Resume S1 · E4 <span class="tv-button__hint">22 min left</span>
+            </a>
+            <button class="tv-button tv-button--secondary tv-focus" type="button" aria-pressed="true">
+              <svg class="tv-icon" aria-hidden="true"><use href="#i-heart-filled"/></svg> Favourite
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <div class="seasons" role="group" aria-label="Seasons" data-row>
+        <button class="tv-chip tv-focus" type="button" aria-pressed="true">Season 1 <span class="tv-chip__count">9</span></button>
+        <button class="tv-chip tv-focus" type="button" aria-pressed="false">Season 2 <span class="tv-chip__count">10</span></button>
+        <span class="seasons__note">5 episodes not on the disk yet</span>
+      </div>
+
+      <ul class="episodes" role="list" aria-label="Season 1 episodes">
+        <li>
+          <a class="episode episode--seen" href="tv-player.html">
+            <span class="episode__still"><img src="https://image.tmdb.org/t/p/w780/ixgFmf1X59PUZam2qbAfskx2gQr.jpg" alt=""><span class="tv-progress" aria-hidden="true"><span style="width: 100%"></span></span></span>
+            <span class="episode__number">1</span>
+            <span class="episode__body">
+              <span class="episode__name">Good News About Hell</span>
+              <span class="episode__summary">Mark is promoted to lead a team who have had their memories surgically divided between their work and personal lives.</span>
+            </span>
+            <span class="episode__trail"><span>57 min</span><span>watched</span></span>
+          </a>
+        </li>
+        <li>
+          <a class="episode episode--seen" href="tv-player.html">
+            <span class="episode__still"><span class="episode__placeholder" aria-hidden="true">E2</span><span class="tv-progress" aria-hidden="true"><span style="width: 100%"></span></span></span>
+            <span class="episode__number">2</span>
+            <span class="episode__body">
+              <span class="episode__name">Half Loop</span>
+              <span class="episode__summary">The team trains their new colleague; Mark's innie and outie begin to feel the strain.</span>
+            </span>
+            <span class="episode__trail"><span>52 min</span><span>watched</span></span>
+          </a>
+        </li>
+        <li>
+          <a class="episode episode--seen" href="tv-player.html">
+            <span class="episode__still"><span class="episode__placeholder" aria-hidden="true">E3</span><span class="tv-progress" aria-hidden="true"><span style="width: 100%"></span></span></span>
+            <span class="episode__number">3</span>
+            <span class="episode__body">
+              <span class="episode__name">In Perpetuity</span>
+              <span class="episode__summary">The team visits the Perpetuity Wing; Helly makes a deal with Mark.</span>
+            </span>
+            <span class="episode__trail"><span>49 min</span><span>watched</span></span>
+          </a>
+        </li>
+        <li>
+          <a class="episode episode--next" href="tv-player.html">
+            <span class="episode__still"><span class="episode__placeholder" aria-hidden="true">E4</span><span class="tv-progress" aria-hidden="true"><span style="width: 38%"></span></span></span>
+            <span class="episode__number">4</span>
+            <span class="episode__body">
+              <span class="episode__name">The You You Are</span>
+              <span class="episode__summary">Mark finds a self-help book that questions the work-life split; Irving strikes up an unexpected friendship.</span>
+            </span>
+            <span class="episode__trail"><span>48 min</span><span>22 min left</span></span>
+          </a>
+        </li>
+        <li>
+          <a class="episode" href="tv-player.html">
+            <span class="episode__still"><span class="episode__placeholder" aria-hidden="true">E5</span></span>
+            <span class="episode__number">5</span>
+            <span class="episode__body">
+              <span class="episode__name">The Grim Barbarity of Optics and Design</span>
+              <span class="episode__summary">Irving and Dylan pursue an inter-departmental rivalry; Helly's efforts to resign escalate.</span>
+            </span>
+            <span class="episode__trail"><span>50 min</span></span>
+          </a>
+        </li>
+        <li>
+          <a class="episode" href="tv-player.html">
+            <span class="episode__still"><span class="episode__placeholder" aria-hidden="true">E6</span></span>
+            <span class="episode__number">6</span>
+            <span class="episode__body">
+              <span class="episode__name">Hide and Seek</span>
+              <span class="episode__summary">The team looks for a map; Mark's outie has a visitor.</span>
+            </span>
+            <span class="episode__trail"><span>44 min</span></span>
+          </a>
+        </li>
+        <li>
+          <span class="episode tv-disabled" aria-disabled="true">
+            <span class="episode__still"><span class="episode__placeholder" aria-hidden="true">E7</span></span>
+            <span class="episode__number">7</span>
+            <span class="episode__body">
+              <span class="episode__name">Defiant Jazz</span>
+              <span class="episode__summary">Not on the disk. The server knows the episode; the file has not arrived.</span>
+            </span>
+            <span class="episode__trail"><span class="tv-badge tv-badge--muted">No file</span></span>
+          </span>
+        </li>
+      </ul>
+
+    </main>
+  </div>
+  <a hidden data-back="tv-home.html"></a>
+  <script src="tv.js"></script>
+</body>
+</html>

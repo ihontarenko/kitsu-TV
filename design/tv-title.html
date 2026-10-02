@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kitsu TV — Interstellar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tv.css">
+  <style>
+    /* The title page: the artwork owns the top of the screen, the film's name and
+       its one button sit on it; everything you might read next is a row below. */
+    .title-hero {
+      min-height: 46rem;
+    }
+
+    .title-hero .tv-hero__body {
+      max-width: 70rem;
+      gap: var(--space-5);
+    }
+
+    .title-hero__summary {
+      font-size: var(--text-body);
+      color: var(--kt-fg-muted);
+      max-width: 60ch;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .title-hero__poster {
+      position: absolute;
+      right: var(--tv-gutter);
+      bottom: var(--space-7);
+      width: 18rem;
+      aspect-ratio: 2 / 3;
+      border: 1px solid var(--kt-border-strong);
+      overflow: hidden;
+    }
+
+    .title-hero__poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Two fact columns under the rows: the film, and the file it is played from. */
+    .title-facts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-9);
+      padding: var(--space-7) var(--tv-gutter) var(--space-9);
+      border-top: 1px solid var(--kt-border);
+    }
+
+    .title-facts h2 {
+      font-size: var(--text-h2);
+      font-weight: 700;
+      margin-bottom: var(--space-5);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .title-facts .tv-facts dd {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .genres {
+      display: flex;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <div class="tv-screen">
+
+    <header class="tv-deck">
+      <div class="tv-brand" aria-label="Kitsu">
+        <span class="tv-brand__mark" aria-hidden="true"></span>
+        <span><span class="tv-brand__soft">media</span>hub</span>
+      </div>
+      <nav class="tv-bays" aria-label="Bays" data-row>
+        <a class="tv-bay tv-focus" href="tv-home.html">Home</a>
+        <a class="tv-bay tv-focus" href="tv-films.html">Films</a>
+        <a class="tv-bay tv-focus" href="tv-series.html">Series</a>
+        <a class="tv-bay tv-focus" href="tv-collections.html">Collections</a>
+        <a class="tv-bay tv-focus" href="tv-genres.html">Genres</a>
+        <a class="tv-bay tv-focus" href="tv-favourites.html">Favourites</a>
+        <a class="tv-bay tv-focus" href="tv-search.html">Search</a>
+      </nav>
+      <div class="tv-deck__status">
+        <span class="tv-deck__server">IVAN-PC</span>
+        <a class="tv-avatar tv-focus" href="tv-profiles.html" aria-label="Profile: Home. Switch profile">HO</a>
+      </div>
+    </header>
+
+    <main class="tv-main">
+
+      <section class="tv-hero title-hero" aria-labelledby="title">
+        <div class="tv-hero__art" aria-hidden="true">
+          <img src="https://image.tmdb.org/t/p/w1280/5XNQBqnBwPA9yT0jZ0p3s8bbLh0.jpg" alt="">
+        </div>
+        <div class="tv-hero__body">
+          <p class="tv-eyebrow">Film · 2014 · Christopher Nolan</p>
+          <h1 class="tv-hero-title" id="title">Interstellar</h1>
+          <p class="tv-lead">Mankind was born on Earth. It was never meant to die here.</p>
+          <p class="tv-meta">
+            <span>169 min</span>
+            <span class="tv-rating">★ 8.5 <span class="tv-subtle">(38 k)</span></span>
+            <span>2160p · HEVC · Atmos</span>
+            <span>EN · UK</span>
+            <span class="tv-badge tv-badge--ok">Direct play</span>
+          </p>
+          <p class="title-hero__summary">The adventures of a group of explorers who make use of a newly discovered wormhole to surpass the limitations on human space travel and conquer the vast distances involved in an interstellar voyage.</p>
+          <div class="tv-actions" data-row>
+            <a class="tv-button tv-button--primary tv-focus" href="tv-player.html" autofocus>
+              <svg class="tv-icon" aria-hidden="true"><use href="#i-play"/></svg> Resume <span class="tv-button__hint">1:12:04</span>
+            </a>
+            <a class="tv-button tv-button--secondary tv-focus" href="tv-player.html">From the start</a>
+            <button class="tv-button tv-button--secondary tv-focus" type="button" aria-pressed="false">
+              <svg class="tv-icon" aria-hidden="true"><use href="#i-heart"/></svg> Favourite
+            </button>
+            <button class="tv-button tv-button--quiet tv-focus" type="button">
+              <svg class="tv-icon" aria-hidden="true"><use href="#i-check"/></svg> Mark watched
+            </button>
+          </div>
+        </div>
+        <figure class="title-hero__poster" aria-hidden="true">
+          <img src="https://image.tmdb.org/t/p/w342/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg" alt="">
+        </figure>
+      </section>
+
+      <div class="tv-shelves">
+
+        <section class="tv-shelf" aria-labelledby="shelf-cast">
+          <div class="tv-shelf__head">
+            <h2 class="tv-shelf__title" id="shelf-cast">Cast &amp; crew</h2>
+            <span class="tv-shelf__note">Open a person for everything of theirs in the library</span>
+          </div>
+          <ul class="tv-row" role="list">
+            <li><a class="tv-person" href="#"><span class="tv-person__portrait"><span aria-hidden="true">MM</span></span><span class="tv-person__name">Matthew McConaughey</span><span class="tv-person__role">Cooper</span></a></li>
+            <li><a class="tv-person" href="#"><span class="tv-person__portrait"><span aria-hidden="true">AH</span></span><span class="tv-person__name">Anne Hathaway</span><span class="tv-person__role">Brand</span></a></li>
+            <li><a class="tv-person" href="#"><span class="tv-person__portrait"><span aria-hidden="true">JC</span></span><span class="tv-person__name">Jessica Chastain</span><span class="tv-person__role">Murph</span></a></li>
+            <li><a class="tv-person" href="#"><span class="tv-person__portrait"><span aria-hidden="true">MC</span></span><span class="tv-person__name">Michael Caine</span><span class="tv-person__role">Professor Brand</span></a></li>
+            <li><a class="tv-person" href="#"><span class="tv-person__portrait"><span aria-hidden="true">CN</span></span><span class="tv-person__name">Christopher Nolan</span><span class="tv-person__role">Director · Writer</span></a></li>
+            <li><a class="tv-person" href="#"><span class="tv-person__portrait"><span aria-hidden="true">HZ</span></span><span class="tv-person__name">Hans Zimmer</span><span class="tv-person__role">Music</span></a></li>
+            <li><a class="tv-person" href="#"><span class="tv-person__portrait"><span aria-hidden="true">HvH</span></span><span class="tv-person__name">Hoyte van Hoytema</span><span class="tv-person__role">Cinematography</span></a></li>
+          </ul>
+        </section>
+
+        <section class="tv-shelf" aria-labelledby="shelf-similar">
+          <div class="tv-shelf__head">
+            <h2 class="tv-shelf__title" id="shelf-similar">More like this</h2>
+            <span class="tv-shelf__note">Same genres, in this library</span>
+          </div>
+          <ul class="tv-row" role="list">
+            <li><a class="tv-tile" href="tv-title.html"><span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg" alt=""></span><span class="tv-tile__caption"><span class="tv-tile__name">Inception</span><span class="tv-tile__meta"><span>2010</span><span class="tv-rating">★ 8.4</span></span></span></a></li>
+            <li><a class="tv-tile" href="tv-title.html"><span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg" alt=""></span><span class="tv-tile__caption"><span class="tv-tile__name">Blade Runner 2049</span><span class="tv-tile__meta"><span>2017</span><span class="tv-rating">★ 7.6</span></span></span></a></li>
+            <li><a class="tv-tile" href="tv-title.html"><span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/dXNAPwY7VrqMAo51EKhhCJfaGb5.jpg" alt=""></span><span class="tv-tile__caption"><span class="tv-tile__name">The Matrix</span><span class="tv-tile__meta"><span>1999</span><span class="tv-rating">★ 8.3</span></span></span></a></li>
+            <li><a class="tv-tile" href="tv-title.html"><span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/vlc95gl3PtrjxSEuM8RhTtSm2xU.jpg" alt=""></span><span class="tv-tile__caption"><span class="tv-tile__name">Valerian and the City of a Thousand Planets</span><span class="tv-tile__meta"><span>2017</span><span class="tv-rating">★ 6.7</span></span></span></a></li>
+            <li><a class="tv-tile" href="tv-title.html"><span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/qvktm0BHcnmDpul4Hz01GIazWPr.jpg" alt=""></span><span class="tv-tile__caption"><span class="tv-tile__name">The Terminator</span><span class="tv-tile__meta"><span>1984</span><span class="tv-rating">★ 7.7</span></span></span></a></li>
+          </ul>
+        </section>
+      </div>
+
+      <section class="title-facts" aria-label="Details">
+        <div>
+          <h2>About the film</h2>
+          <dl class="tv-facts">
+            <dt>Original title</dt><dd>Interstellar</dd>
+            <dt>Released</dt><dd>2014-11-05</dd>
+            <dt>Language</dt><dd>English</dd>
+            <dt>Added</dt><dd>2026-09-04 · 20:55</dd>
+            <dt>Genres</dt><dd><span class="genres"><span class="tv-chip">Science Fiction</span><span class="tv-chip">Drama</span><span class="tv-chip">Пригоди</span></span></dd>
+          </dl>
+        </div>
+        <div>
+          <h2><svg class="tv-icon" aria-hidden="true"><use href="#i-server"/></svg> On the disk</h2>
+          <dl class="tv-facts">
+            <dt>File</dt><dd>Interstellar.2014.2160p.UHD.BluRay.x265.mkv</dd>
+            <dt>Size</dt><dd>21.4 GB · 2 h 49 min</dd>
+            <dt>Video</dt><dd>HEVC Main 10 · 3840×2160 · 23.976 fps · HDR10</dd>
+            <dt>Audio</dt><dd>TrueHD Atmos 7.1 EN · AC-3 5.1 UK</dd>
+            <dt>Subtitles</dt><dd>EN · UK · forced EN</dd>
+            <dt>Playback</dt><dd><span class="tv-badge tv-badge--ok">Direct play</span> <span class="tv-subtle">this television decodes it as is</span></dd>
+          </dl>
+        </div>
+      </section>
+
+    </main>
+  </div>
+  <a hidden data-back="tv-home.html"></a>
+  <script src="tv.js"></script>
+</body>
+</html>

@@ -1,0 +1,1350 @@
+/* ==========================================================================
+   Kitsu TV — Kitsu at ten feet.
+
+   The same design as `Kitsu/FE`, read from a sofa: the two files carry the SAME
+   token values. What changes is not the palette but the physics of the room —
+
+   1. THE CURSOR IS THE FOCUS. There is no pointer. Exactly one thing on the
+      screen is "in hand" at every moment, and it must be findable from three
+      metres without looking for it: a 4px rule in the lightened accent drawn
+      OUTSIDE the control, a slight lift, and nothing else that looks like that.
+
+   2. ONE SCALE, LARGE. The page is drawn for 1920x1080 and everything is in
+      rem, with 1rem = 1/120 of the viewport width — so the design keeps its
+      proportions on a 720p panel, a 1080p panel and a 4K panel alike. Body
+      text is 28px at 1080p; nothing readable is smaller than 22px.
+
+   3. DARK ONLY. A living room is dark, and a bright ground on a television is
+      a lamp. The light theme of the web interface does not exist here, and the
+      tokens below carry only the dark values on `:root`.
+
+   4. THE DECK STAYS. The command bar across the top keeps its bays — the one
+      surface the product is recognised by. It is the rail's ground plus a
+      hairline rather than a palette of its own. The player is the only screen
+      without it.
+
+   ⚠️ THIS REPLACES "HARBOUR", WHICH STOOD HERE UNTIL 2026-09-28, and the four
+   decisions it was built on are reversed on purpose rather than mislaid:
+
+     | Harbour said | Kitsu says |
+     |---|---|
+     | every corner square | four radii — control 6, surface 8, media 10, dialog 12 |
+     | the frame is achromatic; colour only means status | the accent is the mark's own hue |
+     | the focus ring is achromatic, never the accent | the ring is the LIGHTENED accent, drawn outside |
+     | the neutrals are true greys | the neutrals are warm near-blacks |
+
+   ⚠️ THE RING FOLLOWING THE ACCENT IS THE ONE WORTH EXPLAINING, because it was
+   tried here once and undone. An aqua ring landing on an aqua-filled button
+   vanished, so the ring was made near-white. Kitsu's ring is
+   `--kt-accent-text` — the accent mixed towards white until it reads as a line
+   — and `--tv-focus-offset` puts it on the page BESIDE the control rather than
+   on top of it. A different geometry, not the same mistake.
+
+   Order: tokens · reset · layout · typography · components · states ·
+   responsive · theme.
+   ========================================================================== */
+
+/* ---------- 1. tokens ---------------------------------------------------- */
+
+:root {
+  /* Space. The eight-point scale plus the three television steps. */
+  --space-1: 0.25rem;   /*  4px */
+  --space-2: 0.5rem;    /*  8px */
+  --space-3: 0.75rem;   /* 12px */
+  --space-4: 1rem;      /* 16px */
+  --space-5: 1.5rem;    /* 24px */
+  --space-6: 2rem;      /* 32px */
+  --space-7: 3rem;      /* 48px */
+  --space-8: 4rem;      /* 64px */
+  --space-9: 6rem;      /* 96px */
+
+  /* The television frame. The gutter is inside the 5% overscan margin every
+     Android TV panel is allowed to eat, so nothing that matters touches an edge. */
+  --tv-gutter: 6rem;          /* 96px */
+  --tv-deck-height: 6rem;     /* 96px */
+  --tv-lane: 12rem;           /* where a focused row's top lands: 192px from the top */
+  --tv-tile-gap: 1.5rem;      /* 24px */
+  --tv-poster-width: 15rem;   /* 240px, 2:3 → 360px tall */
+  --tv-still-width: 25rem;    /* 400px, 16:9 → 225px tall */
+
+  /*
+    Colour — warm near-blacks, and one hue that means something.
+
+    ⚠️ THESE ARE `Kitsu/FE/src/styles.css`'s `.dark` VALUES, NOT A SEPARATE SET.
+    The names were always the same and now the values are too. That file carries
+    the reasoning for each of them and is the source of truth.
+
+    ⚠️ THE NEUTRALS ARE WARM, not the true greys Harbour used. Four steps of warm
+    near-black sit within a few points of luminance of each other, so depth is
+    drawn by a hairline rather than by a change of colour — which is what keeps a
+    poster the brightest thing on the screen.
+
+    ⚠️ ONLY EMBER IS WRITTEN OUT HERE, and the application offers nine. A static
+    storyboard has no picker; the accent it shows is the one every installation
+    starts with, and every rule below reads the token rather than the value, so
+    pasting another palette's three lines repaints the whole set.
+   */
+  --kt-hue: #ff641b;
+  --kt-hue-hover: #ef5710;
+  --kt-hue-on: #2b1206;
+
+  --kt-bg: #121114;
+  --kt-bg-elevated: #1a181b;
+  --kt-bg-sunken: #211e22;
+  --kt-bg-overlay: #1a181b;
+  --kt-side: #171518;
+  --kt-side-line: #2e2a30;
+
+  --kt-fg: #f3f0ee;
+  --kt-fg-muted: #a8a2a8;
+  --kt-fg-subtle: #847e86;
+  --kt-border: #2a262c;
+  --kt-border-strong: #3a353c;
+  --kt-border-hover: #565059;
+
+  --kt-row: #232027;
+  --kt-media: #252229;
+  --kt-track: #2a262c;
+
+  /* ⚠️ `--kt-accent` IS THE FILL AND IS NOT READABLE AS TEXT. Anything writing a
+     word or drawing a glyph in the accent takes `--kt-accent-text`, which is the
+     same hue mixed towards white until it passes. Getting these two the wrong
+     way round is invisible on some palettes and unreadable on ember. */
+  --kt-accent: var(--kt-hue);
+  --kt-accent-hover: var(--kt-hue-hover);
+  --kt-accent-fg: var(--kt-hue-on);
+  --kt-accent-text: color-mix(in oklab, var(--kt-hue) 70%, #ffffff);
+  --kt-accent-soft: color-mix(in oklab, var(--kt-hue) 16%, var(--kt-bg-elevated));
+  --kt-accent-wash: color-mix(in oklab, var(--kt-hue) 7%, var(--kt-bg-elevated));
+  --kt-accent-line: color-mix(in oklab, var(--kt-hue) 46%, var(--kt-bg-elevated));
+  --kt-accent-tint: color-mix(in oklab, var(--kt-hue) 22%, transparent);
+
+  /* The mark's three planes. ⚠️ Tokens rather than the gradients `logo.svg`
+     carries: inside the product the mark follows whichever palette is on. */
+  --kt-mark-a: var(--kt-accent);
+  --kt-mark-b: color-mix(in oklab, var(--kt-accent) 68%, #3d0e00);
+  --kt-mark-c: color-mix(in oklab, var(--kt-accent) 20%, #ffeeda);
+
+  /* ⚠️ Ink is NOT the accent. Accent answers "which of these is live"; ink
+     answers "this one is selected". Merging them leaves no way to show a chosen
+     row that is not also the current one. */
+  --kt-ink: #f3f0ee;
+  --kt-ink-fg: #121114;
+  --kt-ink-muted: #847e86;
+
+  /* ⚠️ Lifted rather than brightened — a saturated green on near-black glows and
+     pulls the eye off the content. */
+  --kt-ok: #6ed3a1;
+  --kt-ok-bg: #16281f;
+  --kt-warn: #e8b877;
+  --kt-warn-bg: #2a2016;
+  --kt-danger: #f39a94;
+  --kt-danger-bg: #2c1917;
+
+  --kt-rating: #cf9a3a;
+  --kt-progress: var(--kt-accent);
+  --kt-scrim: rgba(5, 4, 6, 0.8);
+
+  --kt-face: #4a3524;
+  --kt-face-fg: #f0cfae;
+
+  --kt-kind-film: #d99b45;
+  --kt-kind-series: #9585e0;
+  --kt-kind-episode: #b0a4ea;
+  --kt-kind-person: #dc6f9e;
+  --kt-kind-collection: #dd8163;
+  --kt-kind-genre: #9598a1;
+
+  /* ⚠️ The deck is the rail's ground plus a hairline, not a second palette. It
+     used to be its own navy so it would be recognised; a surface that has to be
+     recognised by its colour is a surface that is not recognised by its shape.
+     ⚠️ The `--hb-` prefix is Harbour's and is kept only because every mockup
+     spells it; renaming it is a pass of its own. */
+  --hb-deck: #171518;
+  --hb-deck-elevated: #211e22;
+  --hb-deck-fg: #f3f0ee;
+  --hb-deck-muted: #a8a2a8;
+  --hb-deck-border: #2e2a30;
+
+  /* Focus: the one thing that must never be confused with anything else. */
+  --tv-focus: var(--kt-accent-text);
+  --tv-focus-width: 0.25rem;   /* 4px */
+  --tv-focus-offset: 0.375rem; /* 6px */
+  --tv-focus-lift: 1.06;
+
+  /* Type. ⚠️ Inter and JetBrains Mono — Kitsu's own two faces, the same pair the
+     browser and the application are set in. Manrope and DM Mono are gone; DM
+     Mono in particular ships no Cyrillic, so every Ukrainian string in a mono
+     context fell out to the system face and a screen was in two typefaces. */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --text-eyebrow: 1.375rem;  /* 22px, tracked, uppercase */
+  --text-meta: 1.5rem;       /* 24px, mono */
+  --text-caption: 1.5rem;    /* 24px */
+  --text-body: 1.75rem;      /* 28px */
+  --text-lead: 2rem;         /* 32px */
+  --text-h2: 2.25rem;        /* 36px */
+  --text-h1: 4rem;           /* 64px */
+  --text-hero: 5rem;         /* 80px */
+  --text-code: 10rem;        /* 160px — the pairing code */
+
+  /* Geometry. ⚠️ FOUR RADII, AND NOT ZERO. The numbers are the browser's own in
+     CSS pixels doubled, because this storyboard is drawn at twice its scale: the
+     6px control corner there is 12px here and arrives at the same apparent size. */
+  --radius-chip: 0.5rem;     /*  8px */
+  --radius-control: 0.75rem; /* 12px */
+  --radius-surface: 1rem;    /* 16px */
+  --radius-media: 1.25rem;   /* 20px */
+  --radius-dialog: 1.5rem;   /* 24px */
+
+  --motion: 120ms ease;
+}
+
+/* ---------- 2. reset ----------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* 1rem = 1/120 of the width: 16px at 1920, 10.67px at 1280, 32px at 3840. */
+  font-size: calc(100vw / 120);
+  font-family: var(--font-sans);
+  background: var(--kt-bg);
+  color: var(--kt-fg);
+  -webkit-font-smoothing: antialiased;
+  color-scheme: dark;
+  /* A television has no scrollbar; the cursor is what moves the page. */
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-size: var(--text-body);
+  line-height: 1.4;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, p, dl, dd, figure {
+  margin: 0;
+}
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+svg {
+  display: block;
+}
+
+.tv-icon {
+  width: 2rem;
+  height: 2rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: none;
+}
+
+.tv-icon--sm {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.tv-icon--lg {
+  width: 3rem;
+  height: 3rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- 3. layout ---------------------------------------------------- */
+
+.tv-screen {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: var(--tv-deck-height) 1fr;
+}
+
+.tv-screen--bare {
+  grid-template-rows: 1fr;
+}
+
+.tv-main {
+  min-width: 0;
+}
+
+.tv-gutter {
+  padding-inline: var(--tv-gutter);
+}
+
+/* The deck. */
+.tv-deck {
+  height: var(--tv-deck-height);
+  background: var(--hb-deck);
+  color: var(--hb-deck-fg);
+  border-bottom: 1px solid var(--hb-deck-border);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-8);
+  padding-inline: var(--tv-gutter);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.tv-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-weight: 800;
+  font-size: var(--text-lead);
+  letter-spacing: -0.01em;
+}
+
+/*
+  The brand mark — "Стос": a frame outlined behind, a frame solid in front. Many files, one on top.
+
+  ⚠️ THE SAME GEOMETRY AS THE OTHER TWO SURFACES, on the same 32-unit grid. `FE/public/favicon.svg`
+  and the television's `BrandMark` hold these exact rectangles; the percentages below are those
+  coordinates divided by 32, so the three cannot drift by a pixel.
+
+      back:  x 13…28  y  4…19   stroke 3
+      front: x  4…19  y 13…28   filled
+
+  ⚠️ Drawn in CSS rather than as markup ON PURPOSE. Every page already carries the bare
+  `<span class="tv-brand__mark">`, so the mark changes in one file instead of in nine — which is
+  precisely the kind of edit that otherwise gets applied to eight of them.
+ */
+.tv-brand__mark {
+  position: relative;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--kt-fg);
+}
+
+.tv-brand__mark::before,
+.tv-brand__mark::after {
+  content: "";
+  position: absolute;
+  width: 46.875%;  /* 15 / 32 */
+  height: 46.875%;
+}
+
+/* Behind: outlined, top-right. The border sits INSIDE the box (`border-box` from the reset), which
+   is what the SVG's half-inset stroke does — drawn on the edge it would straddle it. */
+.tv-brand__mark::before {
+  top: 12.5%;      /* 4 / 32 */
+  right: 12.5%;
+  border: 0.234375rem solid currentColor;  /* 3 / 32 of the mark */
+}
+
+/* In front: solid, bottom-left, painted over the other. */
+.tv-brand__mark::after {
+  bottom: 12.5%;
+  left: 12.5%;
+  background: currentColor;
+}
+
+/* ⚠️ "media" RECEDES AND "hub" CARRIES THE WORD — two weights of one ink, never two colours, and
+   the halves are that way round in the browser and in the application too. */
+.tv-brand__soft {
+  color: var(--kt-fg-muted);
+}
+
+.tv-bays {
+  display: flex;
+  gap: var(--space-2);
+  height: 100%;
+}
+
+.tv-bay {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: 100%;
+  padding-inline: var(--space-5);
+  color: var(--hb-deck-muted);
+  font-size: var(--text-body);
+  font-weight: 600;
+  position: relative;
+  outline-offset: calc(-1 * var(--tv-focus-width));
+}
+
+.tv-bay[aria-current="page"] {
+  color: var(--hb-deck-fg);
+}
+
+.tv-bay[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: var(--space-5);
+  right: var(--space-5);
+  bottom: 0;
+  height: 0.25rem;
+  background: var(--kt-accent);
+}
+
+.tv-bay:is(:focus, .is-focused) {
+  color: var(--hb-deck-fg);
+  background: var(--hb-deck-elevated);
+}
+
+.tv-deck__status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  color: var(--hb-deck-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+}
+
+/*
+  ⚠️ NO STATUS LIGHT. A green square sat here beside the server's name, and it said nothing the
+  name's presence did not: a server that cannot be reached does not render a deck, it renders the
+  connect screen. A light that is always on is not a light — and it was one of the last two hues
+  left in the chrome, which made it loud out of all proportion to what it reported.
+ */
+.tv-deck__server {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.tv-avatar {
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-items: center;
+  background: var(--kt-ink);
+  color: var(--kt-ink-fg);
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: var(--text-caption);
+}
+
+/* Shelves: a heading, then a row that scrolls sideways under the cursor. */
+.tv-shelves {
+  display: grid;
+  gap: var(--space-7);
+  padding-block: var(--space-7) var(--space-9);
+}
+
+.tv-shelf__head {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  padding-inline: var(--tv-gutter);
+  margin-bottom: var(--space-4);
+}
+
+.tv-shelf__title {
+  font-size: var(--text-h2);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.tv-shelf__note {
+  color: var(--kt-fg-subtle);
+  font-size: var(--text-caption);
+}
+
+.tv-shelf__count {
+  margin-left: auto;
+  color: var(--kt-fg-subtle);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+}
+
+.tv-row {
+  display: flex;
+  gap: var(--tv-tile-gap);
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-inline: var(--tv-gutter);
+  /* room for the focus ring and the lift, which otherwise clip at the row's edge */
+  padding-block: 1rem;
+  margin-block: -1rem;
+  scroll-behavior: smooth;
+}
+
+.tv-row::-webkit-scrollbar {
+  display: none;
+}
+
+.tv-row > * {
+  flex: none;
+}
+
+/* A wall: the catalogue grid, rows of posters with no sideways scroll. */
+.tv-wall {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, var(--tv-poster-width));
+  gap: var(--space-7) var(--tv-tile-gap);
+  padding: 1rem;
+  margin: -1rem;
+}
+
+/* Two columns: a rail of facets on the left, the working area on the right. */
+.tv-split {
+  display: grid;
+  grid-template-columns: 20rem 1fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+/* ---------- 4. typography ------------------------------------------------ */
+
+/*
+  ⚠️ AN EYEBROW DIFFERS BY CASE, TRACKING AND WEIGHT — never by colour.
+
+  It used to be the aqua, which made it the loudest small thing on every screen. Now that the accent
+  is a near-white, colouring it would be worse still: a six-character label would out-shout the title
+  under it. Muted ink plus the uppercase and the tracking is enough, and it is what the web does.
+ */
+.tv-eyebrow {
+  font-size: var(--text-eyebrow);
+  line-height: 1.2;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--kt-fg-muted);
+}
+
+.tv-eyebrow--muted {
+  color: var(--kt-fg-subtle);
+}
+
+.tv-h1 {
+  font-size: var(--text-h1);
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.tv-hero-title {
+  font-size: var(--text-hero);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  max-width: 18ch;
+}
+
+.tv-lead {
+  font-size: var(--text-lead);
+  line-height: 1.3;
+  color: var(--kt-fg-muted);
+  font-style: italic;
+  max-width: 40ch;
+}
+
+.tv-body {
+  font-size: var(--text-body);
+  color: var(--kt-fg);
+  max-width: 56ch;
+}
+
+.tv-muted {
+  color: var(--kt-fg-muted);
+}
+
+.tv-subtle {
+  color: var(--kt-fg-subtle);
+}
+
+.tv-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* A line of facts: year · runtime · rating, mono, separated by a middle dot. */
+.tv-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  font-variant-numeric: tabular-nums;
+  color: var(--kt-fg-muted);
+}
+
+.tv-meta > * {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.tv-rating {
+  color: var(--kt-rating);
+}
+
+/* ---------- 5. components ------------------------------------------------ */
+
+/* Anything the cursor can land on. */
+.tv-focus {
+  outline: var(--tv-focus-width) solid transparent;
+  outline-offset: var(--tv-focus-offset);
+  transition:
+    outline-color var(--motion),
+    background-color var(--motion),
+    color var(--motion),
+    transform 160ms ease;
+}
+
+.tv-focus:is(:focus, .is-focused) {
+  outline-color: var(--tv-focus);
+}
+
+/* Buttons. Three weights: primary (aqua fill), secondary (ink outline), quiet (text). */
+.tv-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  min-height: 4.5rem;              /* 72px — a thumb-sized target even on a remote */
+  padding: 0 var(--space-6);
+  font-size: var(--text-body);
+  font-weight: 700;
+  border-radius: var(--radius-control);
+  border: 0.125rem solid transparent;
+  white-space: nowrap;
+}
+
+.tv-button--primary {
+  background: var(--kt-accent);
+  color: var(--kt-accent-fg);
+}
+
+.tv-button--secondary {
+  background: transparent;
+  color: var(--kt-fg);
+  border-color: var(--kt-border-strong);
+}
+
+.tv-button--quiet {
+  color: var(--kt-fg-muted);
+  padding-inline: var(--space-4);
+}
+
+.tv-button--icon {
+  width: 4.5rem;
+  padding: 0;
+}
+
+.tv-button:is(:focus, .is-focused) {
+  transform: scale(1.03);
+}
+
+.tv-button--secondary:is(:focus, .is-focused),
+.tv-button--quiet:is(:focus, .is-focused) {
+  background: var(--kt-bg-elevated);
+  color: var(--kt-fg);
+  border-color: var(--kt-border-strong);
+}
+
+.tv-button__hint {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: var(--text-meta);
+  opacity: 0.8;
+}
+
+.tv-actions {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+/* Tiles. A poster (2:3), a still (16:9) or a text tile — the same frame. */
+.tv-tile {
+  display: block;
+  width: var(--tv-poster-width);
+  color: inherit;
+}
+
+.tv-tile--still {
+  width: var(--tv-still-width);
+}
+
+.tv-tile__frame {
+  display: block;
+  border-radius: var(--radius-media);
+  position: relative;
+  aspect-ratio: 2 / 3;
+  background: var(--kt-bg-elevated);
+  overflow: hidden;
+  outline: var(--tv-focus-width) solid transparent;
+  outline-offset: var(--tv-focus-offset);
+  transition: outline-color var(--motion), transform 160ms ease;
+}
+
+.tv-tile--still .tv-tile__frame {
+  aspect-ratio: 16 / 9;
+}
+
+.tv-tile__frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tv-tile:is(:focus, .is-focused) {
+  outline: none;
+}
+
+.tv-tile:is(:focus, .is-focused) .tv-tile__frame {
+  outline-color: var(--tv-focus);
+  transform: scale(var(--tv-focus-lift));
+}
+
+.tv-tile:is(:focus, .is-focused) .tv-tile__caption {
+  color: var(--kt-fg);
+}
+
+/* A poster drawn from the name when no artwork exists: the same title always
+   gives the same picture, and it never pretends to be a photograph. */
+.tv-tile__art {
+  position: absolute;
+  inset: 0;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  /* ⚠️ The stand-in for artwork that has not arrived, and it is deliberately DULL. A tile with no
+     picture must not be more interesting than one with a picture — the old navy gradient made an
+     empty shelf look designed and a full one look broken. */
+  background: var(--art-a, var(--kt-bg-elevated));
+  border: 1px solid var(--kt-border);
+}
+
+.tv-tile__art::before {
+  content: "";
+  position: absolute;
+  inset: var(--space-4);
+  border: 1px solid color-mix(in oklab, var(--kt-fg) 18%, transparent);
+  pointer-events: none;
+}
+
+.tv-tile__art-title {
+  font-size: var(--text-caption);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.tv-tile__art-year {
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  color: var(--kt-fg-muted);
+}
+
+.tv-tile__caption {
+  /* 20px: the lifted frame grows 3% downwards and must not touch the name */
+  margin-top: 1.25rem;
+  display: grid;
+  gap: 0.125rem;
+  color: var(--kt-fg-muted);
+  transition: color var(--motion);
+}
+
+.tv-tile__name {
+  font-size: var(--text-caption);
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tv-tile__meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  color: var(--kt-fg-subtle);
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* A still's overlay: episode number, and the remaining-time bar. */
+.tv-tile__overlay {
+  position: absolute;
+  inset: 0;
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  background: linear-gradient(to top, var(--kt-scrim) 0%, color-mix(in oklab, var(--kt-scrim) 55%, transparent) 42%, transparent 78%);
+}
+
+.tv-tile__badge {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  padding: 0.125rem var(--space-2);
+  background: var(--kt-scrim);
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  letter-spacing: 0.08em;
+  color: var(--kt-fg);
+}
+
+/* The progress bar under a still — how far into it you are. */
+.tv-progress {
+  height: 0.375rem;
+  background: color-mix(in oklab, var(--kt-fg) 22%, transparent);
+  position: relative;
+}
+
+.tv-progress > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--kt-progress);
+}
+
+/* Kind mark: the categorical colour, only where kinds are mixed. */
+.tv-kind {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--kind, var(--kt-fg-muted));
+}
+
+.tv-kind::before {
+  content: "";
+  width: 0.75rem;
+  height: 0.75rem;
+  background: var(--kind, var(--kt-fg-muted));
+}
+
+.tv-kind--film { --kind: var(--kt-kind-film); }
+.tv-kind--series { --kind: var(--kt-kind-series); }
+.tv-kind--episode { --kind: var(--kt-kind-episode); }
+.tv-kind--person { --kind: var(--kt-kind-person); }
+.tv-kind--collection { --kind: var(--kt-kind-collection); }
+.tv-kind--genre { --kind: var(--kt-kind-genre); }
+
+/* Status badge: the playback decision, always visible in the player. */
+.tv-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+}
+
+.tv-badge--ok { color: var(--kt-ok); background: var(--kt-ok-bg); }
+.tv-badge--warn { color: var(--kt-warn); background: var(--kt-warn-bg); }
+.tv-badge--danger { color: var(--kt-danger); background: var(--kt-danger-bg); }
+.tv-badge--muted { color: var(--kt-fg-muted); background: var(--kt-bg-elevated); border-color: var(--kt-border-strong); }
+
+/* Chip: a genre, a language, a track — a square, text on elevated ground. */
+.tv-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 3.25rem;
+  padding: 0 var(--space-4);
+  background: var(--kt-bg-elevated);
+  border: 1px solid var(--kt-border);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--kt-fg-muted);
+  border-radius: var(--radius-control);
+}
+
+.tv-chip__count {
+  font-family: var(--font-mono);
+  color: var(--kt-fg-subtle);
+}
+
+.tv-chip[aria-pressed="true"],
+.tv-chip[aria-current="true"] {
+  background: var(--kt-ink);
+  color: var(--kt-ink-fg);
+  border-color: var(--kt-ink);
+}
+
+.tv-chip:is(:focus, .is-focused) {
+  color: var(--kt-fg);
+}
+
+/* Facts: label left, value right, mono. */
+.tv-facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: var(--space-3) var(--space-6);
+  font-size: var(--text-caption);
+}
+
+.tv-facts dt {
+  color: var(--kt-fg-subtle);
+}
+
+.tv-facts dd {
+  font-family: var(--font-mono);
+  color: var(--kt-fg);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Rail: the facet list on the left of a catalogue. One index tab marks the current one. */
+.tv-rail {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.tv-rail__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 4rem;
+  padding: 0 var(--space-4);
+  color: var(--kt-fg-muted);
+  font-size: var(--text-body);
+  font-weight: 600;
+  border-left: 0.25rem solid transparent;
+  border-radius: var(--radius-control);
+  text-align: left;
+  width: 100%;
+}
+
+.tv-rail__item[aria-current="true"] {
+  color: var(--kt-fg);
+  border-left-color: var(--kt-accent);
+  background: var(--kt-bg-elevated);
+}
+
+.tv-rail__item:is(:focus, .is-focused) {
+  color: var(--kt-fg);
+  background: var(--kt-bg-elevated);
+}
+
+.tv-rail__count {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  color: var(--kt-fg-subtle);
+}
+
+/* Hero: artwork across the full width, a veil rising from the ground, text on it. */
+.tv-hero {
+  position: relative;
+  min-height: 34rem;
+  display: grid;
+  align-content: end;
+  padding: var(--space-8) var(--tv-gutter) var(--space-7);
+  isolation: isolate;
+}
+
+.tv-hero__art {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.tv-hero__art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.tv-hero__art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, var(--kt-bg) 0%, color-mix(in oklab, var(--kt-bg) 70%, transparent) 38%, transparent 70%),
+    linear-gradient(to right, color-mix(in oklab, var(--kt-bg) 88%, transparent) 0%, color-mix(in oklab, var(--kt-bg) 40%, transparent) 45%, transparent 75%);
+}
+
+.tv-hero__body {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 62rem;
+}
+
+/* A soft field of light for a screen without artwork: connect, pairing, profiles. */
+.tv-glow {
+  background:
+    radial-gradient(60% 80% at 15% 20%, color-mix(in oklab, var(--kt-accent) 18%, transparent), transparent 70%),
+    radial-gradient(50% 70% at 85% 90%, color-mix(in oklab, var(--kt-accent) 10%, transparent), transparent 70%),
+    var(--kt-bg-sunken);
+}
+
+/* The ruled ground an empty state sits on. */
+.tv-ruled {
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--kt-fg) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--kt-fg) 5%, transparent) 1px, transparent 1px);
+  background-size: 3rem 3rem;
+  background-repeat: round;
+}
+
+/* A choice list: servers found, profiles, tracks. Big rows, one per line. */
+.tv-list {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.tv-list__item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-5);
+  min-height: 6rem;
+  padding: var(--space-4) var(--space-5);
+  background: var(--kt-bg-elevated);
+  border: 1px solid var(--kt-border);
+  color: var(--kt-fg);
+  text-align: left;
+  width: 100%;
+}
+
+.tv-list__item:is(:focus, .is-focused) {
+  border-color: var(--kt-border-strong);
+}
+
+.tv-list__title {
+  font-size: var(--text-body);
+  font-weight: 700;
+}
+
+.tv-list__detail {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  color: var(--kt-fg-subtle);
+}
+
+.tv-list__trail {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  color: var(--kt-fg-muted);
+}
+
+/* The pairing code, and a digit field for a PIN or an address. */
+.tv-code {
+  font-family: var(--font-mono);
+  font-size: var(--text-code);
+  line-height: 1;
+  letter-spacing: 0.12em;
+  font-variant-numeric: tabular-nums;
+  color: var(--kt-fg);
+}
+
+.tv-digits {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.tv-digits > span {
+  width: 5rem;
+  height: 6rem;
+  display: grid;
+  place-items: center;
+  border: 0.125rem solid var(--kt-border-strong);
+  font-family: var(--font-mono);
+  font-size: 3rem;
+  color: var(--kt-fg);
+}
+
+.tv-digits > span[data-active="true"] {
+  border-color: var(--kt-accent-text);
+}
+
+/* The on-screen keyboard: a grid of square keys. */
+.tv-keyboard {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.tv-keyboard__row {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.tv-key {
+  width: 4rem;
+  height: 4rem;
+  display: grid;
+  place-items: center;
+  background: var(--kt-bg-elevated);
+  border: 1px solid var(--kt-border);
+  border-radius: var(--radius-control);
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--kt-fg);
+}
+
+.tv-key--wide {
+  width: auto;
+  padding-inline: var(--space-5);
+  font-size: var(--text-caption);
+  color: var(--kt-fg-muted);
+}
+
+.tv-key--space {
+  flex: 1;
+}
+
+.tv-key:is(:focus, .is-focused) {
+  background: var(--kt-bg-overlay);
+}
+
+/* A query field: what has been typed, with a caret. */
+.tv-query {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 5rem;
+  padding: 0 var(--space-4);
+  border-bottom: 0.125rem solid var(--kt-border-strong);
+  font-size: var(--text-h2);
+  font-weight: 700;
+}
+
+.tv-query__caret {
+  width: 0.1875rem;
+  height: 2.5rem;
+  background: var(--kt-accent-text);
+}
+
+.tv-query__placeholder {
+  color: var(--kt-fg-subtle);
+  font-weight: 500;
+}
+
+/* Key hints: which remote button does what, for the screens that need it. */
+.tv-hints {
+  display: flex;
+  gap: var(--space-6);
+  color: var(--kt-fg-subtle);
+  font-size: var(--text-caption);
+}
+
+.tv-hints > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.tv-keycap {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2.5rem;
+  height: 2.5rem;
+  padding-inline: var(--space-2);
+  border: 1px solid var(--kt-border-strong);
+  border-radius: var(--radius-control);
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  color: var(--kt-fg-muted);
+}
+
+/* Dialog: a panel on the scrim, focus trapped inside. */
+.tv-dialog {
+  border: 1px solid var(--kt-border-strong);
+  background: var(--kt-bg-overlay);
+  color: var(--kt-fg);
+  padding: var(--space-7);
+  width: min(56rem, 90vw);
+  margin: auto;
+}
+
+.tv-dialog::backdrop {
+  background: var(--kt-scrim);
+}
+
+.tv-dialog__title {
+  font-size: var(--text-h2);
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+/* Person tile: a square portrait, name and role. */
+.tv-person {
+  width: 12rem;
+  display: grid;
+  gap: var(--space-3);
+  color: inherit;
+}
+
+.tv-person__portrait {
+  aspect-ratio: 1;
+  background: var(--kt-bg-elevated);
+  border: 1px solid var(--kt-border);
+  display: grid;
+  place-items: center;
+  font-size: var(--text-h2);
+  font-weight: 800;
+  color: var(--kt-fg-subtle);
+  outline: var(--tv-focus-width) solid transparent;
+  outline-offset: var(--tv-focus-offset);
+  transition: outline-color var(--motion), transform 160ms ease;
+  overflow: hidden;
+}
+
+.tv-person__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tv-person:is(:focus, .is-focused) {
+  outline: none;
+}
+
+.tv-person:is(:focus, .is-focused) .tv-person__portrait {
+  outline-color: var(--tv-focus);
+  transform: scale(var(--tv-focus-lift));
+}
+
+.tv-person__name {
+  font-size: var(--text-caption);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tv-person__role {
+  font-size: var(--text-eyebrow);
+  color: var(--kt-fg-subtle);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Section tabs on a title page: Overview · Episodes · Cast · Details. */
+.tv-tabs {
+  display: flex;
+  gap: var(--space-2);
+  border-bottom: 1px solid var(--kt-border);
+}
+
+.tv-tab {
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: -1px;
+  color: var(--kt-fg-muted);
+  font-size: var(--text-body);
+  font-weight: 600;
+  border-bottom: 0.25rem solid transparent;
+}
+
+.tv-tab[aria-selected="true"] {
+  color: var(--kt-fg);
+  border-bottom-color: var(--kt-accent);
+}
+
+.tv-tab:is(:focus, .is-focused) {
+  color: var(--kt-fg);
+  background: var(--kt-bg-elevated);
+  outline-offset: 0;
+}
+
+/* Rules between sections of a page. */
+.tv-rule {
+  border: 0;
+  border-top: 1px solid var(--kt-border);
+  margin: 0;
+}
+
+/* ---------- 6. states ---------------------------------------------------- */
+
+[hidden] {
+  display: none !important;
+}
+
+.tv-disabled,
+[aria-disabled="true"] {
+  opacity: 0.45;
+}
+
+/* A screen shows one state at a time. `tv.js` reads `data-state` on the holder
+   and hides every `[data-when]` child that does not match; the mock-ups switch
+   it with the number keys. */
+
+/* Spinner: one square turning. */
+.tv-spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 0.1875rem solid var(--kt-border-strong);
+  border-top-color: var(--kt-accent-text);
+  animation: tv-spin 900ms linear infinite;
+}
+
+@keyframes tv-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ---------- 7. responsive ------------------------------------------------ */
+
+/* The layout is fixed to a 16:9 television and scales with the width; a
+   narrower aspect (a phone held sideways, a browser window) only crops height. */
+
+/* ---------- 8. theme ----------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .tv-tile:is(:focus, .is-focused) .tv-tile__frame,
+  .tv-person:is(:focus, .is-focused) .tv-person__portrait,
+  .tv-button:is(:focus, .is-focused) {
+    transform: none;
+  }
+}

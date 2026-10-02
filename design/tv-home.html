@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kitsu TV — Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tv.css">
+  <style>
+    /* The hero on the home screen is the thing you were watching: its art, its
+       name, and how much of it is left — the one button is "carry on". */
+    .hero__progress {
+      display: grid;
+      gap: var(--space-2);
+      max-width: 40rem;
+    }
+
+    .hero__progress .tv-progress {
+      height: 0.5rem;
+    }
+
+    /* Genre tiles: text on a tinted ground, no artwork to hide behind. */
+    .tv-tile--genre {
+      width: 20rem;
+    }
+
+    .tv-tile--genre .tv-tile__frame {
+      aspect-ratio: 2 / 1;
+      background: linear-gradient(160deg, color-mix(in oklab, var(--kt-kind-genre) 22%, var(--kt-bg-elevated)), var(--kt-bg-elevated));
+      border: 1px solid var(--kt-border);
+      display: grid;
+      align-content: end;
+      padding: var(--space-4);
+      gap: var(--space-1);
+    }
+
+    .tv-tile--genre .tv-tile__frame strong {
+      font-size: var(--text-lead);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="tv-screen">
+
+    <header class="tv-deck">
+      <div class="tv-brand" aria-label="Kitsu">
+        <span class="tv-brand__mark" aria-hidden="true"></span>
+        <span><span class="tv-brand__soft">media</span>hub</span>
+      </div>
+      <nav class="tv-bays" aria-label="Bays" data-row>
+        <a class="tv-bay tv-focus" href="tv-home.html" aria-current="page">Home</a>
+        <a class="tv-bay tv-focus" href="tv-films.html">Films</a>
+        <a class="tv-bay tv-focus" href="tv-series.html">Series</a>
+        <a class="tv-bay tv-focus" href="tv-collections.html">Collections</a>
+        <a class="tv-bay tv-focus" href="tv-genres.html">Genres</a>
+        <a class="tv-bay tv-focus" href="tv-favourites.html">Favourites</a>
+        <a class="tv-bay tv-focus" href="tv-search.html">Search</a>
+      </nav>
+      <div class="tv-deck__status">
+        <span class="tv-deck__server">IVAN-PC</span>
+        <a class="tv-avatar tv-focus" href="tv-profiles.html" aria-label="Profile: Home. Switch profile">HO</a>
+      </div>
+    </header>
+
+    <main class="tv-main">
+
+      <section class="tv-hero" aria-labelledby="hero-title">
+        <div class="tv-hero__art" aria-hidden="true">
+          <img src="https://image.tmdb.org/t/p/w1280/5XNQBqnBwPA9yT0jZ0p3s8bbLh0.jpg" alt="">
+        </div>
+        <div class="tv-hero__body">
+          <p class="tv-eyebrow">Continue watching · Film · 2014</p>
+          <h1 class="tv-hero-title" id="hero-title">Interstellar</h1>
+          <p class="tv-meta">
+            <span>169 min</span>
+            <span class="tv-rating">★ 8.5</span>
+            <span>2160p · HEVC</span>
+            <span class="tv-badge tv-badge--ok">Direct play</span>
+          </p>
+          <div class="hero__progress">
+            <span class="tv-progress" aria-hidden="true"><span style="width: 43%"></span></span>
+            <span class="tv-mono tv-subtle">1:12:04 of 2:49:00 · 1 h 37 min left</span>
+          </div>
+          <div class="tv-actions" data-row>
+            <a class="tv-button tv-button--primary tv-focus" href="tv-player.html" autofocus>
+              <svg class="tv-icon" aria-hidden="true"><use href="#i-play"/></svg> Resume <span class="tv-button__hint">1:12:04</span>
+            </a>
+            <a class="tv-button tv-button--secondary tv-focus" href="tv-title.html">
+              <svg class="tv-icon" aria-hidden="true"><use href="#i-info"/></svg> Details
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <div class="tv-shelves">
+
+        <section class="tv-shelf" aria-labelledby="shelf-continue">
+          <div class="tv-shelf__head">
+            <h2 class="tv-shelf__title" id="shelf-continue">Continue watching</h2>
+            <span class="tv-shelf__note">Picks up where any screen left off</span>
+          </div>
+          <ul class="tv-row" role="list">
+            <li>
+              <a class="tv-tile tv-tile--still" href="tv-player.html">
+                <span class="tv-tile__frame">
+                  <img src="https://image.tmdb.org/t/p/w780/ixgFmf1X59PUZam2qbAfskx2gQr.jpg" alt="">
+                  <span class="tv-tile__badge">S1 · E4</span>
+                  <span class="tv-tile__overlay">
+                    <span class="tv-progress" aria-hidden="true"><span style="width: 38%"></span></span>
+                  </span>
+                </span>
+                <span class="tv-tile__caption">
+                  <span class="tv-tile__name">Severance — The You You Are</span>
+                  <span class="tv-tile__meta"><span>22 min left</span></span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="tv-tile tv-tile--still" href="tv-player.html">
+                <span class="tv-tile__frame">
+                  <img src="https://image.tmdb.org/t/p/w780/gNdLJU9TxrpGx4dkZidjys3fyy0.jpg" alt="">
+                  <span class="tv-tile__overlay">
+                    <span class="tv-progress" aria-hidden="true"><span style="width: 12%"></span></span>
+                  </span>
+                </span>
+                <span class="tv-tile__caption">
+                  <span class="tv-tile__name">Blade Runner 2049</span>
+                  <span class="tv-tile__meta"><span>2 h 24 min left</span></span>
+                </span>
+              </a>
+            </li>
+            <li>
+              <a class="tv-tile tv-tile--still" href="tv-player.html">
+                <span class="tv-tile__frame">
+                  <img src="https://image.tmdb.org/t/p/w780/kFI1oF6KVnLEbUT7yLIbKXeyvu.jpg" alt="">
+                  <span class="tv-tile__overlay">
+                    <span class="tv-progress" aria-hidden="true"><span style="width: 91%"></span></span>
+                  </span>
+                </span>
+                <span class="tv-tile__caption">
+                  <span class="tv-tile__name">Independence Day</span>
+                  <span class="tv-tile__meta"><span>13 min left</span></span>
+                </span>
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <section class="tv-shelf" aria-labelledby="shelf-latest">
+          <div class="tv-shelf__head">
+            <h2 class="tv-shelf__title" id="shelf-latest">Latest arrivals</h2>
+            <span class="tv-shelf__note">Newest first, by when it was taken into the library</span>
+            <span class="tv-shelf__count">12 titles</span>
+          </div>
+          <ul class="tv-row" role="list">
+            <li>
+              <a class="tv-tile" href="tv-title.html">
+                <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/p0BPQGSPoSa8Ml0DAf2mB2kCU0R.jpg" alt=""></span>
+                <span class="tv-tile__caption"><span class="tv-tile__name">Independence Day</span><span class="tv-tile__meta"><span>1996</span><span class="tv-rating">★ 6.9</span></span></span>
+              </a>
+            </li>
+            <li>
+              <a class="tv-tile" href="tv-title.html">
+                <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/tx85t1XzjTNJQR0hlFut362N1iF.jpg" alt=""></span>
+                <span class="tv-tile__caption"><span class="tv-tile__name">Independent's Day</span><span class="tv-tile__meta"><span>1998</span><span class="tv-rating">★ 6.0</span></span></span>
+              </a>
+            </li>
+            <li>
+              <a class="tv-tile" href="tv-title.html">
+                <span class="tv-tile__frame">
+                  <span class="tv-tile__art" style="--art-a: #3a2c1f; --art-b: #120d0a">
+                    <span class="tv-tile__art-title">Тіні забутих предків</span>
+                    <span class="tv-tile__art-year">1965</span>
+                  </span>
+                </span>
+                <span class="tv-tile__caption"><span class="tv-tile__name">Тіні забутих предків</span><span class="tv-tile__meta"><span>1965</span><span>97 min</span></span></span>
+              </a>
+            </li>
+            <li>
+              <a class="tv-tile" href="tv-title.html">
+                <span class="tv-tile__frame">
+                  <span class="tv-tile__art" style="--art-a: #1f3a2c; --art-b: #0a120d">
+                    <span class="tv-tile__art-title">Дідусів день народження</span>
+                    <span class="tv-tile__art-year">2019</span>
+                  </span>
+                </span>
+                <span class="tv-tile__caption"><span class="tv-tile__name">Дідусів день народження</span><span class="tv-tile__meta"><span>2019</span></span></span>
+              </a>
+            </li>
+            <li>
+              <a class="tv-tile" href="tv-title.html">
+                <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/vlc95gl3PtrjxSEuM8RhTtSm2xU.jpg" alt=""></span>
+                <span class="tv-tile__caption"><span class="tv-tile__name">Valerian and the City of a Thousand Planets</span><span class="tv-tile__meta"><span>2017</span><span class="tv-rating">★ 6.7</span></span></span>
+              </a>
+            </li>
+            <li>
+              <a class="tv-tile" href="tv-title.html">
+                <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/aivXPSi53H95BoUa5njEYso389s.jpg" alt=""></span>
+                <span class="tv-tile__caption"><span class="tv-tile__name">Devil</span><span class="tv-tile__meta"><span>2010</span><span class="tv-rating">★ 6.1</span></span></span>
+              </a>
+            </li>
+            <li>
+              <a class="tv-tile" href="tv-title.html">
+                <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg" alt=""></span>
+                <span class="tv-tile__caption"><span class="tv-tile__name">Blade Runner 2049</span><span class="tv-tile__meta"><span>2017</span><span class="tv-rating">★ 7.6</span></span></span>
+              </a>
+            </li>
+            <li>
+              <a class="tv-tile" href="tv-title.html">
+                <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg" alt=""></span>
+                <span class="tv-tile__caption"><span class="tv-tile__name">Inception</span><span class="tv-tile__meta"><span>2010</span><span class="tv-rating">★ 8.4</span></span></span>
+              </a>
+            </li>
+            <li>
+              <a class="tv-tile" href="tv-title.html">
+                <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg" alt=""></span>
+                <span class="tv-tile__caption"><span class="tv-tile__name">Interstellar</span><span class="tv-tile__meta"><span>2014</span><span class="tv-rating">★ 8.5</span></span></span>
+              </a>
+            </li>
+            <li>
+              <a class="tv-tile" href="tv-series.html">
+                <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/pPHpeI2X1qEd1CS1SeyrdhZ4qnT.jpg" alt=""></span>
+                <span class="tv-tile__caption"><span class="tv-tile__name">Severance</span><span class="tv-tile__meta"><span>2022</span><span>2 seasons</span></span></span>
+              </a>
+            </li>
+            <li>
+              <a class="tv-tile" href="tv-title.html">
+                <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/dXNAPwY7VrqMAo51EKhhCJfaGb5.jpg" alt=""></span>
+                <span class="tv-tile__caption"><span class="tv-tile__name">The Matrix</span><span class="tv-tile__meta"><span>1999</span><span class="tv-rating">★ 8.3</span></span></span>
+              </a>
+            </li>
+            <li>
+              <a class="tv-tile" href="tv-title.html">
+                <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/qvktm0BHcnmDpul4Hz01GIazWPr.jpg" alt=""></span>
+                <span class="tv-tile__caption"><span class="tv-tile__name">The Terminator</span><span class="tv-tile__meta"><span>1984</span><span class="tv-rating">★ 7.7</span></span></span>
+              </a>
+            </li>
+          </ul>
+        </section>
+
+        <section class="tv-shelf" aria-labelledby="shelf-genres">
+          <div class="tv-shelf__head">
+            <h2 class="tv-shelf__title" id="shelf-genres">Browse by genre</h2>
+            <span class="tv-shelf__count">9 genres</span>
+          </div>
+          <ul class="tv-row" role="list">
+            <li><a class="tv-tile tv-tile--genre" href="tv-films.html"><span class="tv-tile__frame"><strong>Science Fiction</strong><span class="tv-tile__meta"><span>7 titles</span></span></span></a></li>
+            <li><a class="tv-tile tv-tile--genre" href="tv-films.html"><span class="tv-tile__frame"><strong>Action</strong><span class="tv-tile__meta"><span>6 titles</span></span></span></a></li>
+            <li><a class="tv-tile tv-tile--genre" href="tv-films.html"><span class="tv-tile__frame"><strong>Drama</strong><span class="tv-tile__meta"><span>4 titles</span></span></span></a></li>
+            <li><a class="tv-tile tv-tile--genre" href="tv-films.html"><span class="tv-tile__frame"><strong>Пригоди</strong><span class="tv-tile__meta"><span>4 titles</span></span></span></a></li>
+            <li><a class="tv-tile tv-tile--genre" href="tv-films.html"><span class="tv-tile__frame"><strong>Mystery</strong><span class="tv-tile__meta"><span>2 titles</span></span></span></a></li>
+            <li><a class="tv-tile tv-tile--genre" href="tv-films.html"><span class="tv-tile__frame"><strong>Thriller</strong><span class="tv-tile__meta"><span>2 titles</span></span></span></a></li>
+            <li><a class="tv-tile tv-tile--genre" href="tv-films.html"><span class="tv-tile__frame"><strong>Documentary</strong><span class="tv-tile__meta"><span>1 title</span></span></span></a></li>
+            <li><a class="tv-tile tv-tile--genre" href="tv-films.html"><span class="tv-tile__frame"><strong>Horror</strong><span class="tv-tile__meta"><span>1 title</span></span></span></a></li>
+          </ul>
+        </section>
+
+        <section class="tv-shelf" aria-labelledby="shelf-collections">
+          <div class="tv-shelf__head">
+            <h2 class="tv-shelf__title" id="shelf-collections">Collections</h2>
+            <span class="tv-shelf__note">Put together on the server</span>
+          </div>
+          <ul class="tv-row" role="list">
+            <li>
+              <a class="tv-tile tv-tile--still" href="tv-films.html">
+                <span class="tv-tile__frame">
+                  <img src="https://image.tmdb.org/t/p/w780/8ZTVqvKDQ8emSGUEMjsS4yHAwrp.jpg" alt="">
+                  <span class="tv-tile__overlay"><span class="tv-kind tv-kind--collection">Collection</span></span>
+                </span>
+                <span class="tv-tile__caption"><span class="tv-tile__name">Nolan, in order</span><span class="tv-tile__meta"><span>3 titles</span></span></span>
+              </a>
+            </li>
+            <li>
+              <a class="tv-tile tv-tile--still" href="tv-films.html">
+                <span class="tv-tile__frame">
+                  <img src="https://image.tmdb.org/t/p/w780/tlm8UkiQsitc8rSuIAscQDCnP8d.jpg" alt="">
+                  <span class="tv-tile__overlay"><span class="tv-kind tv-kind--collection">Collection</span></span>
+                </span>
+                <span class="tv-tile__caption"><span class="tv-tile__name">Friday night classics</span><span class="tv-tile__meta"><span>5 titles</span></span></span>
+              </a>
+            </li>
+          </ul>
+        </section>
+
+      </div>
+    </main>
+  </div>
+  <a hidden data-back="tv-profiles.html"></a>
+  <script src="tv.js"></script>
+</body>
+</html>

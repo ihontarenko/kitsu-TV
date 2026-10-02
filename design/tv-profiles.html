@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kitsu TV — Who is watching</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tv.css">
+  <style>
+    .profiles {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: var(--space-8) var(--tv-gutter);
+    }
+
+    .profiles__top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .profiles__stage {
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: var(--space-8);
+      text-align: center;
+    }
+
+    .profiles__stage h1 {
+      font-size: var(--text-h1);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .profiles__grid {
+      display: flex;
+      gap: var(--space-7);
+    }
+
+    /* A profile: a big square face, the name under it, a lock if it asks for a PIN. */
+    .profile {
+      display: grid;
+      gap: var(--space-4);
+      justify-items: center;
+      width: 16rem;
+      color: inherit;
+    }
+
+    .profile__face {
+      position: relative;
+      width: 14rem;
+      height: 14rem;
+      display: grid;
+      place-items: center;
+      font-size: 5rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: var(--face, var(--kt-bg-elevated));
+      color: var(--face-ink, var(--kt-fg));
+      outline: var(--tv-focus-width) solid transparent;
+      outline-offset: var(--tv-focus-offset);
+      transition: outline-color var(--motion), transform 160ms ease;
+    }
+
+    .profile:is(:focus, .is-focused) {
+      outline: none;
+    }
+
+    .profile:is(:focus, .is-focused) .profile__face {
+      outline-color: var(--tv-focus);
+      transform: scale(var(--tv-focus-lift));
+    }
+
+    .profile__lock {
+      position: absolute;
+      right: var(--space-3);
+      bottom: var(--space-3);
+      width: 2.75rem;
+      height: 2.75rem;
+      display: grid;
+      place-items: center;
+      background: var(--kt-scrim);
+      color: var(--kt-fg);
+    }
+
+    .profile__name {
+      font-size: var(--text-lead);
+      font-weight: 700;
+      color: var(--kt-fg-muted);
+      transition: color var(--motion);
+    }
+
+    .profile:is(:focus, .is-focused) .profile__name {
+      color: var(--kt-fg);
+    }
+
+    .profile__note {
+      font-family: var(--font-mono);
+      font-size: var(--text-eyebrow);
+      color: var(--kt-fg-subtle);
+    }
+
+    .profile--add .profile__face {
+      background: transparent;
+      border: 0.125rem dashed var(--kt-border-strong);
+      color: var(--kt-fg-subtle);
+      font-size: 3rem;
+    }
+
+    .profiles__bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* The PIN dialog: four boxes, a number pad, no text field to type into. */
+    .pin {
+      display: grid;
+      gap: var(--space-5);
+      justify-items: center;
+      text-align: center;
+    }
+
+    .pin__who {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      font-size: var(--text-lead);
+      font-weight: 700;
+    }
+
+    .pin__who .tv-avatar {
+      width: 4rem;
+      height: 4rem;
+      font-size: var(--text-lead);
+      background: #7c3aed;
+      color: #fff;
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 5rem);
+      gap: var(--space-2);
+    }
+
+    .keypad .tv-key {
+      width: 5rem;
+      height: 5rem;
+      font-size: var(--text-lead);
+    }
+
+    .pin__error {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      color: var(--kt-danger);
+      font-size: var(--text-caption);
+      min-height: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="profiles tv-glow">
+
+    <header class="profiles__top">
+      <div class="tv-brand" aria-label="Kitsu">
+        <span class="tv-brand__mark" aria-hidden="true"></span>
+        <span><span class="tv-brand__soft">media</span>hub</span>
+      </div>
+      <p class="tv-deck__status"><span class="tv-deck__server">Kitsu on IVAN-PC</span></p>
+    </header>
+
+    <section class="profiles__stage" aria-labelledby="who-title">
+      <div>
+        <p class="tv-eyebrow">Home</p>
+        <h1 id="who-title">Who is watching?</h1>
+      </div>
+
+      <ul class="profiles__grid" role="list" data-row>
+        <li>
+          <a class="profile" href="tv-home.html" autofocus style="--face: #14b8b0; --face-ink: #04201f">
+            <span class="profile__face"><span aria-hidden="true">I</span></span>
+            <span class="profile__name">Ivan</span>
+            <span class="profile__note">owner · open</span>
+          </a>
+        </li>
+        <li>
+          <button class="profile" type="button" data-open-dialog="pin-dialog" style="--face: #7c3aed; --face-ink: #fff">
+            <span class="profile__face">
+              <span aria-hidden="true">O</span>
+              <span class="profile__lock" aria-hidden="true"><svg class="tv-icon tv-icon--sm"><use href="#i-lock"/></svg></span>
+            </span>
+            <span class="profile__name">Olena</span>
+            <span class="profile__note">PIN</span>
+          </button>
+        </li>
+        <li>
+          <a class="profile" href="tv-home.html" style="--face: #f2a640; --face-ink: #2a1600">
+            <span class="profile__face"><span aria-hidden="true">K</span></span>
+            <span class="profile__name">Kids</span>
+            <span class="profile__note">rated PG and under</span>
+          </a>
+        </li>
+        <li>
+          <a class="profile" href="tv-home.html" style="--face: #172140; --face-ink: #9aa6c4">
+            <span class="profile__face"><span aria-hidden="true">G</span></span>
+            <span class="profile__name">Guest</span>
+            <span class="profile__note">no history kept</span>
+          </a>
+        </li>
+      </ul>
+
+      <p class="tv-subtle">Profiles are made on the server. This television remembers the last one chosen.</p>
+    </section>
+
+    <footer class="profiles__bottom">
+      <p class="tv-hints" aria-label="Remote control hints">
+        <span><span class="tv-keycap">◀▶</span> choose</span>
+        <span><span class="tv-keycap">OK</span> continue</span>
+      </p>
+      <a class="tv-button tv-button--quiet tv-focus" href="tv-connect.html">
+        <svg class="tv-icon" aria-hidden="true"><use href="#i-server"/></svg> Change server
+      </a>
+    </footer>
+
+  </main>
+
+  <dialog class="tv-dialog" id="pin-dialog" aria-labelledby="pin-title">
+    <div class="pin">
+      <p class="pin__who"><span class="tv-avatar" aria-hidden="true">O</span> Olena</p>
+      <h2 class="tv-dialog__title" id="pin-title">Enter the PIN</h2>
+      <div class="tv-digits" aria-label="PIN, two of four digits entered">
+        <span aria-hidden="true">•</span><span aria-hidden="true">•</span><span data-active="true" aria-hidden="true"></span><span aria-hidden="true"></span>
+      </div>
+      <p class="pin__error" role="status"></p>
+      <div class="keypad" role="group" aria-label="Number pad">
+        <button class="tv-key tv-focus" type="button" autofocus>1</button>
+        <button class="tv-key tv-focus" type="button">2</button>
+        <button class="tv-key tv-focus" type="button">3</button>
+        <button class="tv-key tv-focus" type="button">4</button>
+        <button class="tv-key tv-focus" type="button">5</button>
+        <button class="tv-key tv-focus" type="button">6</button>
+        <button class="tv-key tv-focus" type="button">7</button>
+        <button class="tv-key tv-focus" type="button">8</button>
+        <button class="tv-key tv-focus" type="button">9</button>
+        <button class="tv-key tv-focus" type="button" data-close-dialog aria-label="Cancel"><svg class="tv-icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+        <button class="tv-key tv-focus" type="button">0</button>
+        <button class="tv-key tv-focus" type="button" aria-label="Delete last digit"><svg class="tv-icon" aria-hidden="true"><use href="#i-backspace"/></svg></button>
+      </div>
+      <p class="tv-hints"><span><span class="tv-keycap">BACK</span> cancel</span></p>
+    </div>
+  </dialog>
+
+  <a hidden data-back="tv-connect.html"></a>
+  <script src="tv.js"></script>
+</body>
+</html>

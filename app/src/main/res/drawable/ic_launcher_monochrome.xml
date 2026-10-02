@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The mark as a silhouette, for the themed-icon layer.
+
+  ⚠️ ITS OWN FILE, AND IT HAS TO BE. `ic_launcher.xml` could point its `monochrome` layer at the
+  foreground beside it, and the result would be a block: a monochrome layer is re-tinted to one flat
+  ink, so the three strengths the foreground draws the segments in all collapse together and the
+  cuts between them — the only thing that gives the shape structure — disappear.
+
+  ⚠️ THE PALE TRIANGLE IS NOT DRAWN, AND THAT IS HOW THE CUT SURVIVES. The three segments are
+  disjoint, so leaving one out leaves a hole in exactly its shape rather than needing a mask a
+  vector drawable cannot express. What is left reads as the mark with its corner open, which is what
+  the coloured version reads as at a glance.
+
+  ⚠️ #FFFFFF IS NOT THE COLOUR IT WILL BE. A monochrome layer is re-tinted by the launcher to the
+  system theme; only its alpha is read here.
+
+  ⚠️ THE PATHS ARE `ic_launcher_foreground.xml`'s, unchanged. The mapping from the model's box into
+  this canvas is written out there.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,75.42L76,61.53L76,32.58L54,46.47Z" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,46.47L32,32.58L32,61.53Z" />
+</vector>

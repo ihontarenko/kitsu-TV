@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kitsu TV — Find the server</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tv.css">
+  <style>
+    /* Connect: a dark room, a lamp on the left, the choice on the right. */
+    .connect {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+    }
+
+    .connect__lamp {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: var(--space-8) var(--tv-gutter);
+      border-right: 1px solid var(--kt-border);
+    }
+
+    .connect__pitch {
+      align-self: center;
+      display: grid;
+      gap: var(--space-5);
+    }
+
+    .connect__pitch h1 {
+      font-size: var(--text-h1);
+      line-height: 1.05;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      max-width: 14ch;
+    }
+
+    .connect__foot {
+      font-size: var(--text-eyebrow);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--kt-fg-subtle);
+    }
+
+    .connect__choice {
+      display: grid;
+      align-content: center;
+      gap: var(--space-6);
+      padding: var(--space-8) var(--tv-gutter);
+    }
+
+    .connect__head {
+      display: grid;
+      gap: var(--space-2);
+    }
+
+    .connect__head h2 {
+      font-size: var(--text-h2);
+      font-weight: 700;
+    }
+
+    .connect__scanning {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      color: var(--kt-fg-subtle);
+      font-family: var(--font-mono);
+      font-size: var(--text-meta);
+    }
+
+    .server__icon {
+      width: 3.5rem;
+      height: 3.5rem;
+      display: grid;
+      place-items: center;
+      background: var(--kt-bg-overlay);
+      color: var(--kt-accent-text);
+    }
+
+    .server__body {
+      display: grid;
+      gap: var(--space-1);
+    }
+
+    .server__trail {
+      display: grid;
+      justify-items: end;
+      gap: var(--space-1);
+    }
+
+    /* Manual address: four octets, then the port. */
+    .address {
+      display: grid;
+      gap: var(--space-5);
+    }
+
+    .address__field {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-family: var(--font-mono);
+      font-size: 3rem;
+      color: var(--kt-fg-subtle);
+    }
+
+    .address__field .tv-digits > span {
+      width: 4rem;
+      height: 5rem;
+      font-size: 2.5rem;
+    }
+
+    .keypad {
+      display: grid;
+      grid-template-columns: repeat(3, 5rem);
+      gap: var(--space-2);
+    }
+
+    .keypad .tv-key {
+      width: 5rem;
+      height: 5rem;
+    }
+
+    .keypad .tv-key--wide {
+      grid-column: span 3;
+      width: 100%;
+    }
+
+    .empty {
+      display: grid;
+      gap: var(--space-4);
+      padding: var(--space-7);
+      border: 1px solid var(--kt-border);
+      color: var(--kt-fg-muted);
+    }
+
+    .empty strong {
+      color: var(--kt-fg);
+      font-size: var(--text-lead);
+    }
+  </style>
+</head>
+<body>
+  <main class="connect" data-states="found none manual" data-state="found">
+
+    <section class="connect__lamp tv-glow" aria-labelledby="pitch">
+      <div class="tv-brand" aria-label="Kitsu">
+        <span class="tv-brand__mark" aria-hidden="true"></span>
+        <span><span class="tv-brand__soft">media</span>hub</span>
+      </div>
+      <div class="connect__pitch">
+        <p class="tv-eyebrow">Home media library</p>
+        <h1 id="pitch">Your films, on the television — straight from the server.</h1>
+        <p class="tv-lead">Nothing is copied here. The library lives on the server; this screen is a window on it.</p>
+      </div>
+      <p class="connect__foot">Everything stays on this network</p>
+    </section>
+
+    <!-- 1 · servers found on the network -->
+    <section class="connect__choice" data-when="found" aria-labelledby="found-title">
+      <div class="connect__head">
+        <h2 id="found-title">Choose a server</h2>
+        <p class="connect__scanning"><span class="tv-spinner" aria-hidden="true"></span> Looking on this network · _kitsu._tcp</p>
+      </div>
+
+      <ul class="tv-list" role="list" data-row>
+        <li>
+          <a class="tv-list__item tv-focus" href="tv-pairing.html" autofocus>
+            <span class="server__icon" aria-hidden="true"><svg class="tv-icon"><use href="#i-server"/></svg></span>
+            <span class="server__body">
+              <span class="tv-list__title">Kitsu on IVAN-PC</span>
+              <span class="tv-list__detail">192.168.1.24:8130 · v0.3.0 · api v1</span>
+            </span>
+            <span class="server__trail">
+              <span class="tv-badge tv-badge--ok">Compatible</span>
+              <span class="tv-list__detail">nrr-9f2a4c</span>
+            </span>
+          </a>
+        </li>
+        <li>
+          <a class="tv-list__item tv-focus" href="tv-pairing.html">
+            <span class="server__icon" aria-hidden="true"><svg class="tv-icon"><use href="#i-server"/></svg></span>
+            <span class="server__body">
+              <span class="tv-list__title">Kitsu on STUDY-NUC</span>
+              <span class="tv-list__detail">192.168.1.31:8130 · v0.1.4 · api v0</span>
+            </span>
+            <span class="server__trail">
+              <span class="tv-badge tv-badge--warn">Older API</span>
+              <span class="tv-list__detail">nrr-2b81e0</span>
+            </span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="tv-actions">
+        <button class="tv-button tv-button--secondary tv-focus" type="button" data-set-state="manual">
+          <svg class="tv-icon" aria-hidden="true"><use href="#i-keyboard"/></svg>
+          Enter an address instead
+        </button>
+      </div>
+
+      <p class="tv-hints" aria-label="Remote control hints">
+        <span><span class="tv-keycap">▲▼</span> choose</span>
+        <span><span class="tv-keycap">OK</span> connect</span>
+      </p>
+    </section>
+
+    <!-- 2 · nothing found -->
+    <section class="connect__choice" data-when="none" aria-labelledby="none-title">
+      <div class="connect__head">
+        <h2 id="none-title">No server on this network</h2>
+        <p class="connect__scanning"><span class="tv-spinner" aria-hidden="true"></span> Still looking · 42 s</p>
+      </div>
+
+      <div class="empty tv-ruled">
+        <strong>The television cannot see the server.</strong>
+        <p>Make sure Kitsu is running on the server and both are on the same network. A guest network that isolates its devices will hide the server — that is the network, not the app.</p>
+        <p class="tv-mono tv-subtle">Firewall rule needed on Windows: TCP 8130 · UDP 5353</p>
+      </div>
+
+      <div class="tv-actions">
+        <button class="tv-button tv-button--primary tv-focus" type="button" data-set-state="manual" autofocus>
+          <svg class="tv-icon" aria-hidden="true"><use href="#i-keyboard"/></svg>
+          Enter the address
+        </button>
+        <button class="tv-button tv-button--quiet tv-focus" type="button" data-set-state="found">Look again</button>
+      </div>
+    </section>
+
+    <!-- 3 · manual address -->
+    <section class="connect__choice" data-when="manual" aria-labelledby="manual-title">
+      <div class="connect__head">
+        <h2 id="manual-title">Server address</h2>
+        <p class="tv-muted">The address is printed on the Server screen of Kitsu on the server.</p>
+      </div>
+
+      <form class="address" onsubmit="return false">
+        <div class="address__field" aria-label="IP address and port">
+          <span class="tv-digits" aria-hidden="true"><span>1</span><span>9</span><span>2</span></span>
+          <span>.</span>
+          <span class="tv-digits" aria-hidden="true"><span>1</span><span>6</span><span>8</span></span>
+          <span>.</span>
+          <span class="tv-digits" aria-hidden="true"><span>1</span></span>
+          <span>.</span>
+          <span class="tv-digits" aria-hidden="true"><span>2</span><span data-active="true">4</span><span></span></span>
+          <span>:</span>
+          <span class="tv-digits" aria-hidden="true"><span>8</span><span>1</span><span>3</span><span>0</span></span>
+          <span class="visually-hidden">192.168.1.24, port 8130</span>
+        </div>
+
+        <div class="keypad" role="group" aria-label="Number pad">
+          <button class="tv-key tv-focus" type="button" autofocus>1</button>
+          <button class="tv-key tv-focus" type="button">2</button>
+          <button class="tv-key tv-focus" type="button">3</button>
+          <button class="tv-key tv-focus" type="button">4</button>
+          <button class="tv-key tv-focus" type="button">5</button>
+          <button class="tv-key tv-focus" type="button">6</button>
+          <button class="tv-key tv-focus" type="button">7</button>
+          <button class="tv-key tv-focus" type="button">8</button>
+          <button class="tv-key tv-focus" type="button">9</button>
+          <button class="tv-key tv-focus" type="button" aria-label="Dot">.</button>
+          <button class="tv-key tv-focus" type="button">0</button>
+          <button class="tv-key tv-focus" type="button" aria-label="Delete last digit"><svg class="tv-icon" aria-hidden="true"><use href="#i-backspace"/></svg></button>
+        </div>
+
+        <div class="tv-actions">
+          <a class="tv-button tv-button--primary tv-focus" href="tv-pairing.html">Connect <span class="tv-button__hint">192.168.1.24</span></a>
+          <button class="tv-button tv-button--quiet tv-focus" type="button" data-set-state="found">Back to the list</button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+  <script src="tv.js"></script>
+</body>
+</html>

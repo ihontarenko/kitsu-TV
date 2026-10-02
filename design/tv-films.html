@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kitsu TV — Films</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tv.css">
+  <style>
+    /* The catalogue: a rail of genres down the left, a wall of posters on the right.
+       LEFT from the first column of the wall lands on the rail; the rail keeps the
+       chosen genre marked so the eye can come back to it. */
+    .catalog {
+      padding: var(--space-7) var(--tv-gutter) var(--space-9);
+    }
+
+    .catalog__head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--space-5);
+      margin-bottom: var(--space-6);
+    }
+
+    .catalog__head h1 {
+      font-size: var(--text-h1);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+    }
+
+    .catalog__sort {
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    .rail__group {
+      margin-top: var(--space-6);
+    }
+
+    .rail__group:first-child {
+      margin-top: 0;
+    }
+
+    .rail__title {
+      margin-bottom: var(--space-3);
+      padding-inline: var(--space-4);
+    }
+  </style>
+</head>
+<body>
+  <div class="tv-screen">
+
+    <header class="tv-deck">
+      <div class="tv-brand" aria-label="Kitsu">
+        <span class="tv-brand__mark" aria-hidden="true"></span>
+        <span><span class="tv-brand__soft">media</span>hub</span>
+      </div>
+      <nav class="tv-bays" aria-label="Bays" data-row>
+        <a class="tv-bay tv-focus" href="tv-home.html">Home</a>
+        <a class="tv-bay tv-focus" href="tv-films.html" aria-current="page">Films</a>
+        <a class="tv-bay tv-focus" href="tv-series.html">Series</a>
+        <a class="tv-bay tv-focus" href="tv-collections.html">Collections</a>
+        <a class="tv-bay tv-focus" href="tv-genres.html">Genres</a>
+        <a class="tv-bay tv-focus" href="tv-favourites.html">Favourites</a>
+        <a class="tv-bay tv-focus" href="tv-search.html">Search</a>
+      </nav>
+      <div class="tv-deck__status">
+        <span class="tv-deck__server">IVAN-PC</span>
+        <a class="tv-avatar tv-focus" href="tv-profiles.html" aria-label="Profile: Home. Switch profile">HO</a>
+      </div>
+    </header>
+
+    <main class="tv-main catalog">
+      <div class="catalog__head">
+        <div>
+          <p class="tv-eyebrow">Films · Science Fiction</p>
+          <h1>Science Fiction <span class="tv-subtle tv-mono" style="font-size: var(--text-h2); font-weight: 400">7</span></h1>
+        </div>
+        <div class="catalog__sort" role="group" aria-label="Sort" data-row>
+          <button class="tv-chip tv-focus" type="button" aria-pressed="true">Added</button>
+          <button class="tv-chip tv-focus" type="button" aria-pressed="false">Title</button>
+          <button class="tv-chip tv-focus" type="button" aria-pressed="false">Year</button>
+          <button class="tv-chip tv-focus" type="button" aria-pressed="false">Rating</button>
+        </div>
+      </div>
+
+      <div class="tv-split">
+        <nav class="tv-rail" aria-label="Genres">
+          <div class="rail__group">
+            <p class="tv-eyebrow tv-eyebrow--muted rail__title">Genre</p>
+            <button class="tv-rail__item tv-focus" type="button"><span>All films</span><span class="tv-rail__count">11</span></button>
+            <button class="tv-rail__item tv-focus" type="button" aria-current="true"><span>Science Fiction</span><span class="tv-rail__count">7</span></button>
+            <button class="tv-rail__item tv-focus" type="button"><span>Action</span><span class="tv-rail__count">6</span></button>
+            <button class="tv-rail__item tv-focus" type="button"><span>Drama</span><span class="tv-rail__count">4</span></button>
+            <button class="tv-rail__item tv-focus" type="button"><span>Пригоди</span><span class="tv-rail__count">4</span></button>
+            <button class="tv-rail__item tv-focus" type="button"><span>Mystery</span><span class="tv-rail__count">2</span></button>
+            <button class="tv-rail__item tv-focus" type="button"><span>Thriller</span><span class="tv-rail__count">2</span></button>
+            <button class="tv-rail__item tv-focus" type="button"><span>Documentary</span><span class="tv-rail__count">1</span></button>
+            <button class="tv-rail__item tv-focus" type="button"><span>Horror</span><span class="tv-rail__count">1</span></button>
+          </div>
+          <div class="rail__group">
+            <p class="tv-eyebrow tv-eyebrow--muted rail__title">Only</p>
+            <button class="tv-rail__item tv-focus" type="button"><span>Unwatched</span><span class="tv-rail__count">5</span></button>
+            <button class="tv-rail__item tv-focus" type="button"><span>Favourites</span><span class="tv-rail__count">3</span></button>
+            <button class="tv-rail__item tv-focus" type="button"><span>4K</span><span class="tv-rail__count">2</span></button>
+          </div>
+        </nav>
+
+        <ul class="tv-wall" role="list" aria-label="Films">
+          <li>
+            <a class="tv-tile" href="tv-title.html" autofocus>
+              <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg" alt=""></span>
+              <span class="tv-tile__caption"><span class="tv-tile__name">Interstellar</span><span class="tv-tile__meta"><span>2014</span><span class="tv-rating">★ 8.5</span><span>4K</span></span></span>
+            </a>
+          </li>
+          <li>
+            <a class="tv-tile" href="tv-title.html">
+              <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg" alt=""></span>
+              <span class="tv-tile__caption"><span class="tv-tile__name">Inception</span><span class="tv-tile__meta"><span>2010</span><span class="tv-rating">★ 8.4</span></span></span>
+            </a>
+          </li>
+          <li>
+            <a class="tv-tile" href="tv-title.html">
+              <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/dXNAPwY7VrqMAo51EKhhCJfaGb5.jpg" alt=""></span>
+              <span class="tv-tile__caption"><span class="tv-tile__name">The Matrix</span><span class="tv-tile__meta"><span>1999</span><span class="tv-rating">★ 8.3</span></span></span>
+            </a>
+          </li>
+          <li>
+            <a class="tv-tile" href="tv-title.html">
+              <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/qvktm0BHcnmDpul4Hz01GIazWPr.jpg" alt=""></span>
+              <span class="tv-tile__caption"><span class="tv-tile__name">The Terminator</span><span class="tv-tile__meta"><span>1984</span><span class="tv-rating">★ 7.7</span></span></span>
+            </a>
+          </li>
+          <li>
+            <a class="tv-tile" href="tv-title.html">
+              <span class="tv-tile__frame">
+                <img src="https://image.tmdb.org/t/p/w342/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg" alt="">
+                <span class="tv-tile__overlay"><span class="tv-progress" aria-hidden="true"><span style="width: 12%"></span></span></span>
+              </span>
+              <span class="tv-tile__caption"><span class="tv-tile__name">Blade Runner 2049</span><span class="tv-tile__meta"><span>2017</span><span class="tv-rating">★ 7.6</span><span>4K</span></span></span>
+            </a>
+          </li>
+          <li>
+            <a class="tv-tile" href="tv-title.html">
+              <span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/vlc95gl3PtrjxSEuM8RhTtSm2xU.jpg" alt=""></span>
+              <span class="tv-tile__caption"><span class="tv-tile__name">Valerian and the City of a Thousand Planets</span><span class="tv-tile__meta"><span>2017</span><span class="tv-rating">★ 6.7</span></span></span>
+            </a>
+          </li>
+          <li>
+            <a class="tv-tile" href="tv-title.html">
+              <span class="tv-tile__frame">
+                <img src="https://image.tmdb.org/t/p/w342/p0BPQGSPoSa8Ml0DAf2mB2kCU0R.jpg" alt="">
+                <span class="tv-tile__overlay"><span class="tv-progress" aria-hidden="true"><span style="width: 91%"></span></span></span>
+              </span>
+              <span class="tv-tile__caption"><span class="tv-tile__name">Independence Day</span><span class="tv-tile__meta"><span>1996</span><span class="tv-rating">★ 6.9</span></span></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </main>
+  </div>
+  <a hidden data-back="tv-home.html"></a>
+  <script src="tv.js"></script>
+</body>
+</html>

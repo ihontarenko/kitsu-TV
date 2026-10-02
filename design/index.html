@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kitsu TV — Storyboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tv.css">
+  <style>
+    /* The storyboard: every screen at a true 16:9, in the order a person meets
+       them. Each frame is the real page in an iframe drawn at 1920×1080 and
+       scaled down, so what is seen here is what a television would show —
+       click a frame to open it full size and drive it with the arrow keys. */
+    html {
+      font-size: 16px;
+    }
+
+    .board {
+      padding: var(--space-8);
+      display: grid;
+      gap: var(--space-8);
+    }
+
+    .board__head {
+      display: grid;
+      gap: var(--space-2);
+      max-width: 70ch;
+    }
+
+    .board__head h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .board__head p {
+      color: var(--kt-fg-muted);
+      font-size: 0.9375rem;
+    }
+
+    .board__head a {
+      color: var(--kt-accent-text);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(38rem, 1fr));
+      gap: var(--space-7) var(--space-6);
+    }
+
+    .frame {
+      display: grid;
+      gap: var(--space-3);
+    }
+
+    .frame__head {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-3);
+    }
+
+    .frame__step {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--kt-accent-text);
+    }
+
+    .frame__title {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .frame__file {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--kt-fg-subtle);
+    }
+
+    .frame__screen {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      border: 1px solid var(--kt-border-strong);
+      background: var(--kt-bg-sunken);
+      overflow: hidden;
+    }
+
+    .frame__screen iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 1920px;
+      height: 1080px;
+      border: 0;
+      transform-origin: 0 0;
+      pointer-events: none;
+    }
+
+    .frame__open {
+      position: absolute;
+      inset: 0;
+      color: transparent;
+    }
+
+    .frame__open:focus-visible {
+      outline: 3px solid var(--kt-accent-text);
+      outline-offset: -3px;
+    }
+
+    .frame__note {
+      font-size: 0.8125rem;
+      color: var(--kt-fg-muted);
+    }
+  </style>
+</head>
+<body>
+  <main class="board">
+    <header class="board__head">
+      <p class="tv-eyebrow" style="font-size: 0.6875rem">Kitsu TV · Kitsu at ten feet</p>
+      <h1>Storyboard</h1>
+      <p>Thirteen screens, in the order a person meets them, each drawn at 1920×1080 and scaled to fit. Open one to drive it: arrows are the D-pad, Enter is OK, Backspace is BACK, the number keys switch a screen's states. The <a href="jmouse-uik.html">UI Kit</a> is the source of truth for every token and component here.</p>
+    </header>
+
+    <section class="flow" aria-label="Screens">
+      <article class="frame">
+        <div class="frame__head"><span class="frame__step">01</span><span class="frame__title">Find the server</span><span class="frame__file">tv-connect.html</span></div>
+        <div class="frame__screen"><iframe src="tv-connect.html" title="Find the server" loading="lazy" tabindex="-1"></iframe><a class="frame__open" href="tv-connect.html">Open</a></div>
+        <p class="frame__note">mDNS finds the server; an older API is shown, not hidden; the manual address is the fallback for an isolating Wi-Fi. States: found · none · manual.</p>
+      </article>
+      <article class="frame">
+        <div class="frame__head"><span class="frame__step">02</span><span class="frame__title">Pairing</span><span class="frame__file">tv-pairing.html</span></div>
+        <div class="frame__screen"><iframe src="tv-pairing.html" title="Pairing" loading="lazy" tabindex="-1"></iframe><a class="frame__open" href="tv-pairing.html">Open</a></div>
+        <p class="frame__note">The code is the screen; it is typed on the server, never on the remote. The television polls and continues on its own. States: waiting · admitted · expired.</p>
+      </article>
+      <article class="frame">
+        <div class="frame__head"><span class="frame__step">03</span><span class="frame__title">Who is watching</span><span class="frame__file">tv-profiles.html</span></div>
+        <div class="frame__screen"><iframe src="tv-profiles.html" title="Who is watching" loading="lazy" tabindex="-1"></iframe><a class="frame__open" href="tv-profiles.html">Open</a></div>
+        <p class="frame__note">Profiles as big faces; a closed one asks for a four-digit PIN on a pad, in a dialog that traps the cursor.</p>
+      </article>
+      <article class="frame">
+        <div class="frame__head"><span class="frame__step">04</span><span class="frame__title">Home</span><span class="frame__file">tv-home.html</span></div>
+        <div class="frame__screen"><iframe src="tv-home.html" title="Home" loading="lazy" tabindex="-1"></iframe><a class="frame__open" href="tv-home.html">Open</a></div>
+        <p class="frame__note">The hero is what was being watched, with one button. Shelves below: continue, latest arrivals, genres, collections. Rows remember where you left them.</p>
+      </article>
+      <article class="frame">
+        <div class="frame__head"><span class="frame__step">05</span><span class="frame__title">Films</span><span class="frame__file">tv-films.html</span></div>
+        <div class="frame__screen"><iframe src="tv-films.html" title="Films" loading="lazy" tabindex="-1"></iframe><a class="frame__open" href="tv-films.html">Open</a></div>
+        <p class="frame__note">A rail of genres and filters on the left, a wall of posters on the right, sort chips above. LEFT from the first column reaches the rail.</p>
+      </article>
+      <article class="frame">
+        <div class="frame__head"><span class="frame__step">06</span><span class="frame__title">Collections</span><span class="frame__file">tv-collections.html</span></div>
+        <div class="frame__screen"><iframe src="tv-collections.html" title="Collections" loading="lazy" tabindex="-1"></iframe><a class="frame__open" href="tv-collections.html">Open</a></div>
+        <p class="frame__note">A wall of nodes, not of posters — a collection has no face of its own, and borrowing the first film&rsquo;s is a lie that looks convincing. States: arranged · empty.</p>
+      </article>
+      <article class="frame">
+        <div class="frame__head"><span class="frame__step">07</span><span class="frame__title">Genres</span><span class="frame__file">tv-genres.html</span></div>
+        <div class="frame__screen"><iframe src="tv-genres.html" title="Genres" loading="lazy" tabindex="-1"></iframe><a class="frame__open" href="tv-genres.html">Open</a></div>
+        <p class="frame__note">The same wall over the genres. The name and the count are what the choice is made on; nothing here pretends to be artwork.</p>
+      </article>
+      <article class="frame">
+        <div class="frame__head"><span class="frame__step">08</span><span class="frame__title">Inside a node</span><span class="frame__file">tv-node.html</span></div>
+        <div class="frame__screen"><iframe src="tv-node.html" title="Inside a node" loading="lazy" tabindex="-1"></iframe><a class="frame__open" href="tv-node.html">Open</a></div>
+        <p class="frame__note">What is filed under one genre or one collection — one page for both, the eyebrow the only difference. No rail and no sort: this page IS the narrowing, and a collection&rsquo;s order is the thing that made it one.</p>
+      </article>
+      <article class="frame">
+        <div class="frame__head"><span class="frame__step">09</span><span class="frame__title">Kept</span><span class="frame__file">tv-favourites.html</span></div>
+        <div class="frame__screen"><iframe src="tv-favourites.html" title="Kept" loading="lazy" tabindex="-1"></iframe><a class="frame__open" href="tv-favourites.html">Open</a></div>
+        <p class="frame__note">The household&rsquo;s own shelf. The heading names what they DID, which is what lets the empty state name the gesture that fills it. States: kept · empty.</p>
+      </article>
+      <article class="frame">
+        <div class="frame__head"><span class="frame__step">10</span><span class="frame__title">Title</span><span class="frame__file">tv-title.html</span></div>
+        <div class="frame__screen"><iframe src="tv-title.html" title="Title" loading="lazy" tabindex="-1"></iframe><a class="frame__open" href="tv-title.html">Open</a></div>
+        <p class="frame__note">Artwork owns the top; name, one line, the facts that matter, and the playback decision. Below: cast, more like this, and what is on the disk.</p>
+      </article>
+      <article class="frame">
+        <div class="frame__head"><span class="frame__step">11</span><span class="frame__title">Series</span><span class="frame__file">tv-series.html</span></div>
+        <div class="frame__screen"><iframe src="tv-series.html" title="Series" loading="lazy" tabindex="-1"></iframe><a class="frame__open" href="tv-series.html">Open</a></div>
+        <p class="frame__note">Seasons as chips, episodes as a list that reads downwards: still, number, name, what is left. An episode not on the disk is shown, disabled, and says why.</p>
+      </article>
+      <article class="frame">
+        <div class="frame__head"><span class="frame__step">12</span><span class="frame__title">Player</span><span class="frame__file">tv-player.html</span></div>
+        <div class="frame__screen"><iframe src="tv-player.html" title="Player" loading="lazy" tabindex="-1"></iframe><a class="frame__open" href="tv-player.html">Open</a></div>
+        <p class="frame__note">Two thin bands of chrome over the picture; direct play or transcode always in the corner; the clock time it ends. States: paused · playing · ending (up next).</p>
+      </article>
+      <article class="frame">
+        <div class="frame__head"><span class="frame__step">13</span><span class="frame__title">Search</span><span class="frame__file">tv-search.html</span></div>
+        <div class="frame__screen"><iframe src="tv-search.html" title="Search" loading="lazy" tabindex="-1"></iframe><a class="frame__open" href="tv-search.html">Open</a></div>
+        <p class="frame__note">A letter grid where the thumb rests, results as letters land, and every result says why it matched. States: results · empty.</p>
+      </article>
+    </section>
+  </main>
+  <script>
+    /* Scale every 1920-wide frame to the width its box actually has. */
+    function fitFrames() {
+      for (const screen of document.querySelectorAll(".frame__screen")) {
+        const scale = screen.clientWidth / 1920;
+        screen.querySelector("iframe").style.transform = `scale(${scale})`;
+      }
+    }
+    fitFrames();
+    window.addEventListener("resize", fitFrames);
+  </script>
+</body>
+</html>

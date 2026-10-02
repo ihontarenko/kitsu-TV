@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kitsu TV — UI Kit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tv.css">
+  <style>
+    /* The kit is read on a monitor, not a television, so it is the one page that
+       does not scale with the viewport: 1rem is a fixed 16px here and the kit's
+       own chrome is small, while every specimen is drawn with the real tokens. */
+    html {
+      font-size: 16px;
+    }
+
+    .kit {
+      display: grid;
+      grid-template-columns: 16rem 1fr;
+      min-height: 100vh;
+    }
+
+    .kit__nav {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: var(--space-6) var(--space-5);
+      border-right: 1px solid var(--kt-border);
+      background: var(--hb-deck);
+      font-size: 0.875rem;
+    }
+
+    .kit__nav h1 {
+      font-size: 1.125rem;
+      font-weight: 800;
+      margin-bottom: var(--space-2);
+    }
+
+    .kit__nav p {
+      color: var(--hb-deck-muted);
+      font-size: 0.75rem;
+      margin-bottom: var(--space-5);
+    }
+
+    .kit__nav a {
+      display: block;
+      padding: var(--space-2) var(--space-3);
+      color: var(--hb-deck-muted);
+      border-left: 2px solid transparent;
+    }
+
+    .kit__nav a:hover,
+    .kit__nav a:focus {
+      color: var(--hb-deck-fg);
+      border-left-color: var(--kt-accent);
+      outline: none;
+    }
+
+    .kit__main {
+      padding: var(--space-7) var(--space-8) var(--space-9);
+      font-size: 0.875rem;
+      max-width: 90rem;
+    }
+
+    .kit__main > section {
+      padding-block: var(--space-7);
+      border-bottom: 1px solid var(--kt-border);
+    }
+
+    .kit__main h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      margin-bottom: var(--space-2);
+    }
+
+    .kit__main h3 {
+      font-size: 0.6875rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--kt-fg-subtle);
+      margin: var(--space-6) 0 var(--space-3);
+    }
+
+    .kit__lead {
+      color: var(--kt-fg-muted);
+      max-width: 70ch;
+      margin-bottom: var(--space-4);
+    }
+
+    .kit__note {
+      color: var(--kt-fg-subtle);
+      font-size: 0.8125rem;
+      max-width: 70ch;
+      margin-top: var(--space-3);
+    }
+
+    /* A specimen: the component at television size, on the page ground, with a
+       line under it saying what it is. Everything inside is 1rem = 16px, which is
+       exactly the 1080p size. */
+    .specimen {
+      display: grid;
+      gap: var(--space-3);
+      padding: var(--space-5);
+      border: 1px solid var(--kt-border);
+      background: var(--kt-bg);
+      overflow-x: auto;
+    }
+
+    .specimen__row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .specimen__label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--kt-fg-subtle);
+    }
+
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+      gap: var(--space-3);
+    }
+
+    .swatch {
+      display: grid;
+      grid-template-rows: 4rem auto;
+      border: 1px solid var(--kt-border);
+    }
+
+    .swatch__ink {
+      background: var(--swatch);
+    }
+
+    .swatch__meta {
+      padding: var(--space-2) var(--space-3);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      display: grid;
+    }
+
+    .swatch__meta strong {
+      color: var(--kt-fg);
+      font-weight: 500;
+    }
+
+    .swatch__meta span {
+      color: var(--kt-fg-subtle);
+    }
+
+    .type-scale {
+      display: grid;
+      gap: var(--space-4);
+    }
+
+    .type-scale > div {
+      display: grid;
+      grid-template-columns: 14rem 1fr;
+      align-items: baseline;
+      gap: var(--space-5);
+    }
+
+    .type-scale .specimen__label {
+      padding-top: 0.25rem;
+    }
+
+    .spaces {
+      display: grid;
+      gap: var(--space-2);
+    }
+
+    .spaces > div {
+      display: grid;
+      grid-template-columns: 8rem 1fr;
+      align-items: center;
+      gap: var(--space-4);
+    }
+
+    .spaces i {
+      display: block;
+      height: 1rem;
+      background: var(--kt-accent);
+    }
+
+    table.kit-table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.8125rem;
+    }
+
+    .kit-table th,
+    .kit-table td {
+      text-align: left;
+      padding: var(--space-2) var(--space-3);
+      border-bottom: 1px solid var(--kt-border);
+      vertical-align: top;
+    }
+
+    .kit-table th {
+      color: var(--kt-fg-subtle);
+      font-weight: 600;
+      font-size: 0.6875rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .kit-table td code {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--kt-accent-text);
+    }
+
+    /* Focus specimens are shown in the focused state with the same class the
+       engine sets, so the kit does not depend on where the cursor is. */
+  </style>
+</head>
+<body>
+  <div class="kit">
+
+    <nav class="kit__nav" aria-label="Kit sections">
+      <h1>Kitsu TV · UI Kit</h1>
+      <p>Kitsu, at ten feet. Source of truth for every screen in this directory.</p>
+      <a href="#principles">Principles</a>
+      <a href="#colour">Colour</a>
+      <a href="#type">Type</a>
+      <a href="#space">Space &amp; frame</a>
+      <a href="#focus">Focus</a>
+      <a href="#buttons">Buttons</a>
+      <a href="#tiles">Tiles</a>
+      <a href="#shelf">Shelves &amp; walls</a>
+      <a href="#navigation">Deck &amp; rail</a>
+      <a href="#marks">Marks, badges, chips</a>
+      <a href="#facts">Facts &amp; lists</a>
+      <a href="#input">Input on a remote</a>
+      <a href="#player">Player</a>
+      <a href="#dialog">Dialog</a>
+      <a href="#states">States</a>
+      <a href="#icons">Icons</a>
+      <a href="#remote">Remote mapping</a>
+    </nav>
+
+    <main class="kit__main">
+
+      <section id="principles">
+        <h2>Principles</h2>
+        <p class="kit__lead">The television is not a bigger monitor. It is read from three metres, driven with five buttons, and watched in the dark. Every decision below follows from those three facts.</p>
+        <table class="kit-table">
+          <thead><tr><th>Rule</th><th>What it means on a screen</th></tr></thead>
+          <tbody>
+            <tr><td>The cursor is the focus</td><td>Exactly one element is in hand. It wears a 4px aqua rule 6px outside its edge and lifts 6%. Nothing else on the screen looks like that — the aqua is spent on focus, the primary action, a link and progress, and on nothing decorative.</td></tr>
+            <tr><td>Nothing readable under 22px</td><td>Body 28px, captions 24px, eyebrows 22px tracked. Titles 64–80px. The pairing code 160px. Every size is a token; a screen does not invent one.</td></tr>
+            <tr><td>Rows, not pages</td><td>Sideways within a row, up and down between rows. A row remembers where you left it. A focused row lands on the same lane, 192px from the top, so the eye never chases the cursor.</td></tr>
+            <tr><td>Nothing hides behind hover</td><td>There is no pointer. Whatever a web hover would reveal is either always visible, or comes with focus.</td></tr>
+            <tr><td>No typing that can be avoided</td><td>The television is admitted with a six-digit code confirmed on the server, never with a password. A profile PIN is four digits on a pad. Search is a letter grid, results arrive as letters land.</td></tr>
+            <tr><td>The playback decision is visible</td><td><span class="tv-badge tv-badge--ok" style="font-size: 0.75rem">Direct play</span> or <span class="tv-badge tv-badge--warn" style="font-size: 0.75rem">Transcode</span> is on the title page and in the player's chrome, because it is the first question when the picture stutters.</td></tr>
+            <tr><td>Dark only, four radii, one hue</td><td>Kitsu's dark set on <code>:root</code>. Radius 12px on controls, 16 on surfaces, 20 on media, 24 on a dialog. Depth is drawn with rules and two steps of surface, never with shadow. The one hue is the accent — the mark's own ember, and eight others.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="colour">
+        <h2>Colour</h2>
+        <p class="kit__lead">The same names the web interface reads (<code>--kt-*</code>, <code>--hb-deck-*</code>), dark values only. Kind colours are categorical and equal in weight; status colours are the other family, and the two are never mixed on one mark.</p>
+        <h3>Ground and ink</h3>
+        <div class="swatches">
+          <div class="swatch" style="--swatch: var(--kt-bg)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-bg</strong><span>#0b1220 · page</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-bg-elevated)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-bg-elevated</strong><span>#121a2e · tile, chip, row in hand</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-bg-overlay)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-bg-overlay</strong><span>#172140 · dialog</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-bg-sunken)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-bg-sunken</strong><span>#070c17 · under a glow</span></span></div>
+          <div class="swatch" style="--swatch: var(--hb-deck)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--hb-deck</strong><span>#070c17 · the command bar</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-fg)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-fg</strong><span>#e9edf7 · text</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-fg-muted)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-fg-muted</strong><span>#9aa6c4 · secondary text</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-fg-subtle)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-fg-subtle</strong><span>#667195 · labels, counts</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-border)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-border</strong><span>#1f2a45 · hairline</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-border-strong)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-border-strong</strong><span>#31406a · control edge</span></span></div>
+        </div>
+        <h3>The aqua, and status</h3>
+        <div class="swatches">
+          <div class="swatch" style="--swatch: var(--kt-accent)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-accent</strong><span>#2bd6ce · fill: primary button, progress</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-accent-text)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-accent-text</strong><span>#5ae6df · focus ring, eyebrow, link</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-ok)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-ok</strong><span>#4ad38f · direct play, watched</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-warn)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-warn</strong><span>#f6bb45 · transcode, older API</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-danger)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-danger</strong><span>#ff7272 · expired, refused</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-rating)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-rating</strong><span>#f6bb45 · ★ only</span></span></div>
+        </div>
+        <h3>Kinds</h3>
+        <div class="swatches">
+          <div class="swatch" style="--swatch: var(--kt-kind-film)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-kind-film</strong><span>#f2a640</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-kind-series)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-kind-series</strong><span>#a78bfa</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-kind-episode)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-kind-episode</strong><span>#c4b5fd</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-kind-person)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-kind-person</strong><span>#f472b6</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-kind-collection)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-kind-collection</strong><span>#fb8a6a</span></span></div>
+          <div class="swatch" style="--swatch: var(--kt-kind-genre)"><span class="swatch__ink"></span><span class="swatch__meta"><strong>--kt-kind-genre</strong><span>#9aa7bf</span></span></div>
+        </div>
+        <p class="kit__note">A kind mark appears only where kinds are mixed — search results, a collection tile on the home screen. A shelf called “Films” does not stamp FILM on every poster.</p>
+      </section>
+
+      <section id="type">
+        <h2>Type</h2>
+        <p class="kit__lead">Inter for words, JetBrains Mono for anything the eye compares — timecodes, years, addresses, file facts, counts. Sizes are 1080p pixels; on the screens they are rem and scale with the panel.</p>
+        <div class="specimen">
+          <div class="type-scale">
+            <div><span class="specimen__label">--text-hero · 80 / 800</span><span class="tv-hero-title">Interstellar</span></div>
+            <div><span class="specimen__label">--text-h1 · 64 / 800</span><span class="tv-h1">Who is watching?</span></div>
+            <div><span class="specimen__label">--text-h2 · 36 / 700</span><span class="tv-shelf__title">Continue watching</span></div>
+            <div><span class="specimen__label">--text-lead · 32 / italic</span><span class="tv-lead">Mankind was born on Earth. It was never meant to die here.</span></div>
+            <div><span class="specimen__label">--text-body · 28</span><span class="tv-body">Make sure Kitsu is running on the server and both are on the same network.</span></div>
+            <div><span class="specimen__label">--text-caption · 24 / 600</span><span class="tv-tile__name" style="font-size: var(--text-caption)">Blade Runner 2049</span></div>
+            <div><span class="specimen__label">--text-meta · 24 mono</span><span class="tv-meta"><span>169 min</span><span class="tv-rating">★ 8.5</span><span>2160p · HEVC</span></span></div>
+            <div><span class="specimen__label">--text-eyebrow · 22 tracked</span><span class="tv-eyebrow">Continue watching · Film · 2014</span></div>
+            <div><span class="specimen__label">--text-code · 160 mono</span><span class="tv-code" style="font-size: 6rem">482 917</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="space">
+        <h2>Space &amp; frame</h2>
+        <p class="kit__lead">The eight-point scale, plus the television's own measures. A 1080p panel may lose up to 5% at each edge to overscan; the gutter keeps everything that matters inside it.</p>
+        <div class="specimen">
+          <div class="spaces">
+            <div><span class="specimen__label">--space-1 · 4</span><i style="width: 0.25rem"></i></div>
+            <div><span class="specimen__label">--space-2 · 8</span><i style="width: 0.5rem"></i></div>
+            <div><span class="specimen__label">--space-3 · 12</span><i style="width: 0.75rem"></i></div>
+            <div><span class="specimen__label">--space-4 · 16</span><i style="width: 1rem"></i></div>
+            <div><span class="specimen__label">--space-5 · 24</span><i style="width: 1.5rem"></i></div>
+            <div><span class="specimen__label">--space-6 · 32</span><i style="width: 2rem"></i></div>
+            <div><span class="specimen__label">--space-7 · 48</span><i style="width: 3rem"></i></div>
+            <div><span class="specimen__label">--space-8 · 64</span><i style="width: 4rem"></i></div>
+            <div><span class="specimen__label">--space-9 · 96</span><i style="width: 6rem"></i></div>
+          </div>
+        </div>
+        <table class="kit-table" style="margin-top: var(--space-4)">
+          <tbody>
+            <tr><td><code>--tv-gutter</code></td><td>96px — the left edge of every title, row and button, inside the overscan margin</td></tr>
+            <tr><td><code>--tv-deck-height</code></td><td>96px — the command bar</td></tr>
+            <tr><td><code>--tv-lane</code></td><td>192px — where a focused row's top lands</td></tr>
+            <tr><td><code>--tv-poster-width</code></td><td>240px, 2:3 — six and a half posters across a 1080p row</td></tr>
+            <tr><td><code>--tv-still-width</code></td><td>400px, 16:9 — a still for an episode or a collection</td></tr>
+            <tr><td><code>--tv-tile-gap</code></td><td>24px</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="focus">
+        <h2>Focus</h2>
+        <p class="kit__lead">One treatment, everywhere. A 4px rule in <code>--kt-accent-text</code>, 6px outside the element, and a lift of 6% for tiles and 3% for buttons. Text in hand goes from muted to full ink; a surface in hand rises one step.</p>
+        <div class="specimen">
+          <div class="specimen__row">
+            <a class="tv-tile is-focused" href="#" style="width: 10rem"><span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/xlaY2zyzMfkhk0HSC5VUwzoZPU1.jpg" alt=""></span><span class="tv-tile__caption"><span class="tv-tile__name">Inception</span><span class="tv-tile__meta"><span>2010</span></span></span></a>
+            <a class="tv-tile" href="#" style="width: 10rem"><span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/dXNAPwY7VrqMAo51EKhhCJfaGb5.jpg" alt=""></span><span class="tv-tile__caption"><span class="tv-tile__name">The Matrix</span><span class="tv-tile__meta"><span>1999</span></span></span></a>
+            <button class="tv-button tv-button--primary tv-focus is-focused" type="button"><svg class="tv-icon" aria-hidden="true"><use href="#i-play"/></svg> Resume</button>
+            <button class="tv-button tv-button--secondary tv-focus is-focused" type="button">Details</button>
+            <button class="tv-chip tv-focus is-focused" type="button">Season 1</button>
+          </div>
+          <span class="specimen__label">in hand: tile · primary · secondary · chip — the rest of the row is at rest</span>
+        </div>
+        <p class="kit__note">The engine in <code>tv.js</code> mirrors <code>:focus</code> into <code>.is-focused</code>, because a browser window in the background stops matching <code>:focus</code> while a television never loses it. Every focus rule is written as <code>:is(:focus, .is-focused)</code>.</p>
+      </section>
+
+      <section id="buttons">
+        <h2>Buttons</h2>
+        <p class="kit__lead">Three weights, one height (72px). Primary is the aqua fill and there is one per screen; secondary is an ink outline; quiet is text. A hint in mono after the label carries the number the button acts on.</p>
+        <div class="specimen">
+          <div class="specimen__row">
+            <button class="tv-button tv-button--primary tv-focus" type="button"><svg class="tv-icon" aria-hidden="true"><use href="#i-play"/></svg> Resume <span class="tv-button__hint">1:12:04</span></button>
+            <button class="tv-button tv-button--secondary tv-focus" type="button">From the start</button>
+            <button class="tv-button tv-button--secondary tv-focus" type="button"><svg class="tv-icon" aria-hidden="true"><use href="#i-heart"/></svg> Favourite</button>
+            <button class="tv-button tv-button--quiet tv-focus" type="button"><svg class="tv-icon" aria-hidden="true"><use href="#i-check"/></svg> Mark watched</button>
+            <button class="tv-button tv-button--secondary tv-button--icon tv-focus" type="button" aria-label="Back 10 seconds"><svg class="tv-icon" aria-hidden="true"><use href="#i-back10"/></svg></button>
+          </div>
+          <span class="specimen__label">.tv-button--primary · --secondary · --quiet · --icon</span>
+        </div>
+      </section>
+
+      <section id="tiles">
+        <h2>Tiles</h2>
+        <p class="kit__lead">A poster (2:3), a still (16:9), a text tile for a genre, a square for a person — one frame, one caption. When artwork is missing the frame draws itself from the name and never pretends to be a photograph.</p>
+        <div class="specimen">
+          <div class="specimen__row" style="align-items: flex-start">
+            <a class="tv-tile" href="#"><span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/yQvGrMoipbRoddT0ZR8tPoR7NfX.jpg" alt=""></span><span class="tv-tile__caption"><span class="tv-tile__name">Interstellar</span><span class="tv-tile__meta"><span>2014</span><span class="tv-rating">★ 8.5</span><span>4K</span></span></span></a>
+            <a class="tv-tile" href="#"><span class="tv-tile__frame"><span class="tv-tile__art" style="--art-a: #3a2c1f; --art-b: #120d0a"><span class="tv-tile__art-title">Тіні забутих предків</span><span class="tv-tile__art-year">1965</span></span></span><span class="tv-tile__caption"><span class="tv-tile__name">Тіні забутих предків</span><span class="tv-tile__meta"><span>1965</span><span>97 min</span></span></span></a>
+            <a class="tv-tile tv-tile--still" href="#"><span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w780/ixgFmf1X59PUZam2qbAfskx2gQr.jpg" alt=""><span class="tv-tile__badge">S1 · E4</span><span class="tv-tile__overlay"><span class="tv-progress" aria-hidden="true"><span style="width: 38%"></span></span></span></span><span class="tv-tile__caption"><span class="tv-tile__name">Severance — The You You Are</span><span class="tv-tile__meta"><span>22 min left</span></span></span></a>
+            <a class="tv-person" href="#"><span class="tv-person__portrait"><span aria-hidden="true">CN</span></span><span class="tv-person__name">Christopher Nolan</span><span class="tv-person__role">Director · Writer</span></a>
+          </div>
+          <span class="specimen__label">.tv-tile · .tv-tile with .tv-tile__art · .tv-tile--still with badge and progress · .tv-person</span>
+        </div>
+      </section>
+
+      <section id="shelf">
+        <h2>Shelves &amp; walls</h2>
+        <p class="kit__lead">A shelf is a heading and a row that scrolls sideways under the cursor. A wall is the catalogue grid. Both start at the gutter; a row's padding is the gutter too, so the first tile lines up with the heading and the last one can still be reached.</p>
+        <div class="specimen" style="padding-inline: 0">
+          <section class="tv-shelf">
+            <div class="tv-shelf__head" style="padding-inline: var(--space-5)">
+              <h2 class="tv-shelf__title" style="margin: 0">Latest arrivals</h2>
+              <span class="tv-shelf__note">Newest first</span>
+              <span class="tv-shelf__count">12 titles</span>
+            </div>
+            <ul class="tv-row" role="list" style="padding-inline: var(--space-5)">
+              <li><a class="tv-tile" href="#"><span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/p0BPQGSPoSa8Ml0DAf2mB2kCU0R.jpg" alt=""></span><span class="tv-tile__caption"><span class="tv-tile__name">Independence Day</span><span class="tv-tile__meta"><span>1996</span></span></span></a></li>
+              <li><a class="tv-tile" href="#"><span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg" alt=""></span><span class="tv-tile__caption"><span class="tv-tile__name">Blade Runner 2049</span><span class="tv-tile__meta"><span>2017</span></span></span></a></li>
+              <li><a class="tv-tile" href="#"><span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/qvktm0BHcnmDpul4Hz01GIazWPr.jpg" alt=""></span><span class="tv-tile__caption"><span class="tv-tile__name">The Terminator</span><span class="tv-tile__meta"><span>1984</span></span></span></a></li>
+              <li><a class="tv-tile" href="#"><span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/vlc95gl3PtrjxSEuM8RhTtSm2xU.jpg" alt=""></span><span class="tv-tile__caption"><span class="tv-tile__name">Valerian and the City of a Thousand Planets</span><span class="tv-tile__meta"><span>2017</span></span></span></a></li>
+              <li><a class="tv-tile" href="#"><span class="tv-tile__frame"><img src="https://image.tmdb.org/t/p/w342/pPHpeI2X1qEd1CS1SeyrdhZ4qnT.jpg" alt=""></span><span class="tv-tile__caption"><span class="tv-tile__name">Severance</span><span class="tv-tile__meta"><span>2022</span></span></span></a></li>
+            </ul>
+          </section>
+        </div>
+        <p class="kit__note">A caption is one line and ellipsised; the full name is on the title page, one press away. A shelf never wraps to a second row — that is a wall's job.</p>
+      </section>
+
+      <section id="navigation">
+        <h2>Deck &amp; rail</h2>
+        <p class="kit__lead">The deck is the command bar: the brand, four bays, the server light, the clock and the profile. It stays navy and stays put; UP from the first row reaches it. The rail is the facet list on the left of a catalogue; the chosen facet keeps an index tab.</p>
+        <div class="specimen" style="padding: 0">
+          <header class="tv-deck" style="position: static">
+            <div class="tv-brand"><span class="tv-brand__mark" aria-hidden="true"></span><span>kitsu</span></div>
+            <nav class="tv-bays" aria-label="Bays">
+              <a class="tv-bay tv-focus" href="#" aria-current="page"><svg class="tv-icon" aria-hidden="true"><use href="#i-home"/></svg> Home</a>
+              <a class="tv-bay tv-focus is-focused" href="#"><svg class="tv-icon" aria-hidden="true"><use href="#i-film"/></svg> Films</a>
+              <a class="tv-bay tv-focus" href="#"><svg class="tv-icon" aria-hidden="true"><use href="#i-series"/></svg> Series</a>
+              <a class="tv-bay tv-focus" href="#"><svg class="tv-icon" aria-hidden="true"><use href="#i-search"/></svg> Search</a>
+            </nav>
+            <div class="tv-deck__status"><span class="tv-deck__server">IVAN-PC</span><span>21:42</span><a class="tv-avatar tv-focus" href="#" aria-label="Profile" style="background: #14b8b0; color: #04201f">I</a></div>
+          </header>
+        </div>
+        <div class="specimen" style="margin-top: var(--space-4)">
+          <nav class="tv-rail" style="width: 20rem" aria-label="Genres">
+            <button class="tv-rail__item tv-focus" type="button"><span>All films</span><span class="tv-rail__count">11</span></button>
+            <button class="tv-rail__item tv-focus" type="button" aria-current="true"><span>Science Fiction</span><span class="tv-rail__count">7</span></button>
+            <button class="tv-rail__item tv-focus is-focused" type="button"><span>Action</span><span class="tv-rail__count">6</span></button>
+            <button class="tv-rail__item tv-focus" type="button"><span>Drama</span><span class="tv-rail__count">4</span></button>
+          </nav>
+          <span class="specimen__label">.tv-rail — current (index tab) and in hand are two different things, and both can be seen at once</span>
+        </div>
+      </section>
+
+      <section id="marks">
+        <h2>Marks, badges, chips</h2>
+        <div class="specimen">
+          <div class="specimen__row">
+            <span class="tv-kind tv-kind--film">Film</span>
+            <span class="tv-kind tv-kind--series">Series</span>
+            <span class="tv-kind tv-kind--episode">Episode</span>
+            <span class="tv-kind tv-kind--person">Person</span>
+            <span class="tv-kind tv-kind--collection">Collection</span>
+            <span class="tv-kind tv-kind--genre">Genre</span>
+          </div>
+          <span class="specimen__label">.tv-kind — categorical, only where kinds mix</span>
+          <div class="specimen__row">
+            <span class="tv-badge tv-badge--ok">Direct play</span>
+            <span class="tv-badge tv-badge--warn">Transcode · 1080p</span>
+            <span class="tv-badge tv-badge--danger">Refused</span>
+            <span class="tv-badge tv-badge--muted">No file</span>
+          </div>
+          <span class="specimen__label">.tv-badge — status, the other family</span>
+          <div class="specimen__row">
+            <button class="tv-chip tv-focus" type="button" aria-pressed="true">Season 1 <span class="tv-chip__count">9</span></button>
+            <button class="tv-chip tv-focus" type="button" aria-pressed="false">Season 2 <span class="tv-chip__count">10</span></button>
+            <span class="tv-chip">Science Fiction</span>
+            <button class="tv-chip tv-focus is-focused" type="button" aria-pressed="false">Rating</button>
+          </div>
+          <span class="specimen__label">.tv-chip — pressed is ink on paper; a plain chip is a genre on the facts panel</span>
+          <div class="specimen__row">
+            <span class="tv-progress" style="width: 20rem"><span style="width: 43%"></span></span>
+            <span class="tv-mono tv-subtle">1:12:04 of 2:49:00</span>
+          </div>
+          <span class="specimen__label">.tv-progress — how far in; 6px, aqua on 22% ink</span>
+        </div>
+      </section>
+
+      <section id="facts">
+        <h2>Facts &amp; lists</h2>
+        <div class="specimen">
+          <div class="specimen__row" style="align-items: flex-start; gap: var(--space-8)">
+            <dl class="tv-facts" style="max-width: 36rem">
+              <dt>File</dt><dd>Interstellar.2014.2160p.UHD.BluRay.x265.mkv</dd>
+              <dt>Video</dt><dd>HEVC Main 10 · 3840×2160 · HDR10</dd>
+              <dt>Audio</dt><dd>TrueHD Atmos 7.1 EN · AC-3 5.1 UK</dd>
+              <dt>Playback</dt><dd><span class="tv-badge tv-badge--ok">Direct play</span></dd>
+            </dl>
+            <ul class="tv-list" style="width: 40rem" role="list">
+              <li><a class="tv-list__item tv-focus is-focused" href="#"><span class="tv-avatar" aria-hidden="true" style="width: 3.5rem; height: 3.5rem"><svg class="tv-icon" aria-hidden="true"><use href="#i-server"/></svg></span><span><span class="tv-list__title">Kitsu on IVAN-PC</span><br><span class="tv-list__detail">192.168.1.24:8130 · v0.3.0</span></span><span class="tv-badge tv-badge--ok">Compatible</span></a></li>
+              <li><a class="tv-list__item tv-focus" href="#"><span class="tv-avatar" aria-hidden="true" style="width: 3.5rem; height: 3.5rem"><svg class="tv-icon" aria-hidden="true"><use href="#i-server"/></svg></span><span><span class="tv-list__title">Kitsu on STUDY-NUC</span><br><span class="tv-list__detail">192.168.1.31:8130 · v0.1.4</span></span><span class="tv-badge tv-badge--warn">Older API</span></a></li>
+            </ul>
+          </div>
+          <span class="specimen__label">.tv-facts (label · mono value) · .tv-list (one big row per choice)</span>
+        </div>
+      </section>
+
+      <section id="input">
+        <h2>Input on a remote</h2>
+        <p class="kit__lead">Digits are boxes with the active one in aqua; letters are a grid of 64px keys; the query is a bar with a caret. Nothing here is a text field the platform would want to open its own keyboard over.</p>
+        <div class="specimen">
+          <div class="specimen__row" style="gap: var(--space-8); align-items: flex-start">
+            <div>
+              <div class="tv-digits" aria-label="PIN"><span>•</span><span>•</span><span data-active="true"></span><span></span></div>
+              <span class="specimen__label">.tv-digits</span>
+            </div>
+            <div>
+              <div class="tv-keyboard">
+                <div class="tv-keyboard__row"><button class="tv-key tv-focus" type="button">a</button><button class="tv-key tv-focus" type="button">b</button><button class="tv-key tv-focus is-focused" type="button">c</button><button class="tv-key tv-focus" type="button">d</button><button class="tv-key tv-focus" type="button">e</button></div>
+                <div class="tv-keyboard__row"><button class="tv-key tv-key--wide tv-key--space tv-focus" type="button">space</button><button class="tv-key tv-key--wide tv-focus" type="button" aria-label="Delete"><svg class="tv-icon" aria-hidden="true"><use href="#i-backspace"/></svg></button></div>
+              </div>
+              <span class="specimen__label">.tv-keyboard · .tv-key · --wide · --space</span>
+            </div>
+            <div style="width: 24rem">
+              <div class="tv-query" role="textbox" aria-readonly="true"><span>inter</span><span class="tv-query__caret" aria-hidden="true"></span></div>
+              <span class="specimen__label">.tv-query</span>
+            </div>
+          </div>
+          <div class="specimen__row">
+            <p class="tv-hints"><span><span class="tv-keycap">◀ ▶</span> 10 s</span><span><span class="tv-keycap">OK</span> play / pause</span><span><span class="tv-keycap">BACK</span> leave</span></p>
+          </div>
+          <span class="specimen__label">.tv-hints · .tv-keycap — only on the screens where a button does something you could not guess</span>
+        </div>
+      </section>
+
+      <section id="player">
+        <h2>Player</h2>
+        <p class="kit__lead">The seek bar is one control: in hand it wears the ring 12px out, LEFT/RIGHT step it. Timecodes are 32px mono with tabular figures; the right one counts down and says when the film ends by the clock, which is the number a person on a sofa actually wants.</p>
+        <div class="specimen" style="background: #000">
+          <div class="seek" style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--space-5); font-family: var(--font-mono); font-size: var(--text-lead); font-variant-numeric: tabular-nums">
+            <span>26:12</span>
+            <div style="position: relative; height: 0.5rem; background: color-mix(in oklab, var(--kt-fg) 26%, transparent); outline: 0.25rem solid var(--tv-focus); outline-offset: 0.75rem">
+              <span style="position: absolute; inset: 0 auto 0 0; width: 71%; background: color-mix(in oklab, var(--kt-fg) 18%, transparent)"></span>
+              <span style="position: absolute; inset: 0 auto 0 0; width: 54.6%; background: var(--kt-progress)"></span>
+              <span style="position: absolute; top: 50%; left: 54.6%; width: 1.5rem; height: 1.5rem; transform: translate(-50%, -50%); background: var(--kt-progress); border: 0.1875rem solid var(--kt-fg)"></span>
+            </div>
+            <span>−21:48 <span class="tv-subtle" style="font-size: var(--text-meta)">· ends 22:04</span></span>
+          </div>
+          <span class="specimen__label">.seek — played (aqua), buffered (ink 18%), a square thumb with an ink edge</span>
+        </div>
+      </section>
+
+      <section id="dialog">
+        <h2>Dialog</h2>
+        <p class="kit__lead">A panel on the scrim, focus trapped inside, BACK closes it and returns the cursor to where it was. There is no close button in the corner — the remote has one.</p>
+        <div class="specimen">
+          <div class="tv-dialog" style="margin: 0; width: 40rem">
+            <h2 class="tv-dialog__title" style="font-size: var(--text-h2)">Enter the PIN</h2>
+            <p class="tv-muted">Olena's profile asks for four digits.</p>
+          </div>
+          <span class="specimen__label">.tv-dialog on --kt-bg-overlay, --kt-border-strong edge, ::backdrop is --kt-scrim</span>
+        </div>
+      </section>
+
+      <section id="states">
+        <h2>States</h2>
+        <p class="kit__lead">Every screen has its empty, waiting and refused states drawn; the mock-ups switch between them with the number keys 1–4, listed in each page's <code>data-states</code>. Empty states sit on the ruled ground so a blank library still reads as an instrument.</p>
+        <div class="specimen">
+          <div class="specimen__row" style="align-items: flex-start; gap: var(--space-6)">
+            <div class="tv-ruled" style="display: grid; gap: var(--space-2); padding: var(--space-6); border: 1px solid var(--kt-border); width: 30rem"><strong style="font-size: var(--text-lead)">No server on this network</strong><span class="tv-muted" style="font-size: var(--text-caption)">Make sure Kitsu is running on the server.</span></div>
+            <p class="tv-mono" style="display: flex; align-items: center; gap: var(--space-3); color: var(--kt-fg-subtle); font-size: var(--text-meta)"><span class="tv-spinner" aria-hidden="true"></span> Waiting for the server to confirm</p>
+            <span class="tv-code" style="font-size: 4rem; color: var(--kt-fg-subtle); text-decoration: line-through; text-decoration-color: var(--kt-danger); text-decoration-thickness: 0.25rem">482 917</span>
+          </div>
+          <span class="specimen__label">.tv-ruled · .tv-spinner · an expired code is struck through in danger, not repainted</span>
+        </div>
+        <table class="kit-table" style="margin-top: var(--space-4)">
+          <thead><tr><th>Screen</th><th>States (keys 1–n)</th></tr></thead>
+          <tbody>
+            <tr><td>tv-connect</td><td>found · none · manual</td></tr>
+            <tr><td>tv-pairing</td><td>waiting · admitted · expired</td></tr>
+            <tr><td>tv-player</td><td>paused (chrome up) · playing (chrome folded; OK or an arrow brings it back) · ending (up next)</td></tr>
+            <tr><td>tv-search</td><td>results · empty</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="icons">
+        <h2>Icons</h2>
+        <p class="kit__lead">One sprite, injected by <code>tv.js</code>; 24-unit grid, 1.75 stroke, round caps, drawn at 32px. Play, pause and next are the only filled shapes — the transport is the thing pressed most.</p>
+        <div class="specimen">
+          <div class="specimen__row" style="gap: var(--space-5)">
+            <svg class="tv-icon"><use href="#i-play"/></svg><svg class="tv-icon"><use href="#i-pause"/></svg><svg class="tv-icon"><use href="#i-back10"/></svg><svg class="tv-icon"><use href="#i-forward10"/></svg><svg class="tv-icon"><use href="#i-next"/></svg><svg class="tv-icon"><use href="#i-audio"/></svg><svg class="tv-icon"><use href="#i-subtitles"/></svg><svg class="tv-icon"><use href="#i-search"/></svg><svg class="tv-icon"><use href="#i-home"/></svg><svg class="tv-icon"><use href="#i-film"/></svg><svg class="tv-icon"><use href="#i-series"/></svg><svg class="tv-icon"><use href="#i-heart"/></svg><svg class="tv-icon"><use href="#i-heart-filled"/></svg><svg class="tv-icon"><use href="#i-check"/></svg><svg class="tv-icon"><use href="#i-lock"/></svg><svg class="tv-icon"><use href="#i-server"/></svg><svg class="tv-icon"><use href="#i-keyboard"/></svg><svg class="tv-icon"><use href="#i-backspace"/></svg><svg class="tv-icon"><use href="#i-arrow-right"/></svg><svg class="tv-icon"><use href="#i-info"/></svg><svg class="tv-icon"><use href="#i-clock"/></svg><svg class="tv-icon"><use href="#i-settings"/></svg><svg class="tv-icon"><use href="#i-close"/></svg><svg class="tv-icon"><use href="#i-warning"/></svg>
+          </div>
+          <span class="specimen__label">play · pause · back10 · forward10 · next · audio · subtitles · search · home · film · series · heart · heart-filled · check · lock · server · keyboard · backspace · arrow-right · info · clock · settings · close · warning</span>
+        </div>
+      </section>
+
+      <section id="remote">
+        <h2>Remote mapping</h2>
+        <p class="kit__lead">What the five buttons do, screen by screen. The Android TV client binds these to <code>KEYCODE_DPAD_*</code>, <code>DPAD_CENTER</code>, <code>BACK</code> and the media keys; the mock-ups bind them to the arrows, Enter and Backspace.</p>
+        <table class="kit-table">
+          <thead><tr><th>Where</th><th>◀ ▶</th><th>▲ ▼</th><th>OK</th><th>BACK</th><th>Media keys</th></tr></thead>
+          <tbody>
+            <tr><td>Home, catalogue, title</td><td>along the row</td><td>between rows; ▲ from the first row reaches the deck</td><td>open</td><td>previous screen; on Home, the profile chooser</td><td>PLAY on a tile plays it from where it was left</td></tr>
+            <tr><td>Series</td><td>seasons</td><td>episodes</td><td>play the episode</td><td>previous screen</td><td>—</td></tr>
+            <tr><td>Player, chrome folded</td><td>seek 10 s, hold to scrub</td><td>brings the chrome up</td><td>pause, chrome up</td><td>leave; position saved</td><td>PLAY/PAUSE · FF/RW · NEXT episode</td></tr>
+            <tr><td>Player, chrome up</td><td>along the controls</td><td>seek bar ↔ controls</td><td>press the control</td><td>fold the chrome first, then leave</td><td>same</td></tr>
+            <tr><td>Search</td><td>keys; from the last column into the results</td><td>key rows; modes above them</td><td>type the letter / open the result</td><td>clear a letter; on an empty query, leave</td><td>—</td></tr>
+            <tr><td>Pairing, PIN</td><td>—</td><td>—</td><td>—</td><td>cancel</td><td>—</td></tr>
+          </tbody>
+        </table>
+        <p class="kit__note">Long-press OK on a tile is deliberately unused. It is the least discoverable gesture on a remote, and everything a long-press might offer (favourite, mark watched) is a button on the title page one press away.</p>
+      </section>
+
+    </main>
+  </div>
+  <script src="tv.js"></script>
+</body>
+</html>

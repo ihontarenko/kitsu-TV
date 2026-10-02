@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      The window itself is painted before Compose draws a frame, so the first thing on the panel is
+      never a white flash.
+
+      ⚠️ #171518 IS KITSU'S RAIL GROUND, AND IT IS THE SPLASH'S GROUND TOO. That is the whole point
+      of the value: the hand-off from the Leanback launcher goes wallpaper → window → splash with no
+      step of colour in it. Using the page ground (#121114) here would put one step between the
+      window and the first composed frame, which on a television reads as a flicker.
+
+      ⚠️ IT WAS #0B1220 UNTIL NOW — a navy from a palette this product stopped using in 2026-09-23
+      and has since replaced twice over. A window background is invisible for a few hundred
+      milliseconds and is therefore the last colour anybody notices is wrong.
+    -->
+    <style name="Theme.KitsuTv" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#171518</item>
+        <item name="android:colorBackground">#171518</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:navigationBarColor">#171518</item>
+        <item name="android:statusBarColor">#171518</item>
+    </style>
+</resources>

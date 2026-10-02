@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The mark: three flat segments, at rest, on the accent.
+
+  ⚠️ IT WAS THE OLD FOLDED MARK UNTIL NOW — a fold, a fold-back and a pale face in two gradients,
+  which is the drawing this product stopped using when the mark became three separable segments. An
+  icon is the one place a retired mark survives longest: nothing renders it inside the application,
+  so nothing ever looks wrong while it is wrong. The launcher had been showing it for weeks.
+
+  ⚠️ AT REST, CORNERS UP. That is the study's own first state — the tension before the move — and
+  where anything still is drawn. The Play sign is where the cycle ENDS, not where the mark sits.
+
+  ⚠️ ONE INK AT THREE STRENGTHS, NOT THREE COLOURS. On a fill the mark cannot take its palette: the
+  three planes are `#2B1206` — `Accent.Ember.ink`, the ink chosen to read on ember — at 100%, 72%
+  and 45%. The alphas keep the value order the coloured version has, which is the whole reason they
+  are not equal: all three segments touch, so one ink at one strength is a silhouette with no mark
+  in it. This is `MarkTone.OnColour` in `BrandMark.kt`, drawn by hand because a drawable cannot ask
+  Compose for anything.
+
+  ⚠️ THE GEOMETRY IS THE MODEL'S, NOT REDRAWN. These are `restPath()` of
+  `Kitsu/FE/src/lib/mark-motion.ts` — the study's own vertices — mapped from its `37 66 76 74` box
+  into this 108 canvas. The mapping is arithmetic and is written down so it can be redone rather
+  than eyeballed: the mark is fitted to 44 units wide (scale 44/76 = 0.5789, height 42.84) and
+  centred, so x = 32 + (x−37)·0.5789 and y = 32.58 + (y−66)·0.5789.
+
+  ⚠️ AND THE SIZE IS THE SAFE CIRCLE, MEASURED. An adaptive icon is a canvas of which a launcher may
+  keep only the central 66dp, and on a round crop only the circle inscribed in it — radius 33 from
+  the centre at 54,54. The mark's furthest corner lands 30.7 from that centre — inside it with room to
+  spare, and at 44 units wide the mark fills the visible tile in the same proportion the kit's own
+  `size-10` mark fills its `size-16` tile. At 40 it was visibly timid against that reference.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- The quad — the largest segment, and the one that lands on itself across the move. -->
+    <path
+        android:fillColor="#2B1206"
+        android:fillAlpha="1.0"
+        android:pathData="M54,75.42L76,61.53L76,32.58L54,46.47Z" />
+
+    <!-- The pale triangle. It and the dark one change places across the move. -->
+    <path
+        android:fillColor="#2B1206"
+        android:fillAlpha="0.45"
+        android:pathData="M54,75.42L54,46.47L32,61.53Z" />
+
+    <!-- The dark triangle. -->
+    <path
+        android:fillColor="#2B1206"
+        android:fillAlpha="0.72"
+        android:pathData="M54,46.47L32,32.58L32,61.53Z" />
+</vector>
